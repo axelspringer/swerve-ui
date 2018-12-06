@@ -17,7 +17,7 @@ const getToken = () => {
   return getItem(TOKEN_STORAGE_KEY);
 };
 
-const removeToken = () => {
+const clearToken = () => {
   return removeItem(TOKEN_STORAGE_KEY);
 };
 
@@ -28,4 +28,4 @@ const isValid = () => {
   return !!getToken();
 };
 
-export { TOKEN_STORAGE_KEY, getToken, isValid };
+export { TOKEN_STORAGE_KEY, getToken, clearToken, setToken, isValid };
