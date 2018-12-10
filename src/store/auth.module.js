@@ -20,6 +20,10 @@ const actions = {
       });
       */
 
+      if (username !== 'admin' && password !== 'admin') {
+        return Promise.reject();
+      }
+
       const response = await Promise.resolve({data: {access_token: 'access_token'}});
   
       const token = response.data.access_token;

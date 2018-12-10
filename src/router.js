@@ -13,21 +13,24 @@ const router = new Router({
     {
       path: "/",
       name: "home",
+      redirect: { name: 'domains' },
       component: Home
     },
     {
       path: "/domains",
-      name: "domains",
-      component: () => {
-        import(/* webpackChunkName: "domains" */ "./views/Domains.vue")
-      }
-    },
-    {
-      path: "/domains/:domain",
-      name: "domain",
-      component: () => {
-        import(/* webpackChunkName: "domain" */ "./views/Domain.vue")
-      }
+      component: () => import(/* webpackChunkName: "domains" */ "@/views/Domains.vue"),
+      children: [
+        {
+          path: "",
+          name: "domain-list",
+          component: () => import(/* webpackChunkName: "domain-list" */ "@/views/Domain.vue")
+        },
+        {
+          path: ":domain",
+          name: "domain-detail",
+          component: () => import(/* webpackChunkName: "domain-detail" */ "@/views/Domain.vue")
+        }
+      ]
     },
     {
       path: "/login",
@@ -46,7 +49,8 @@ router.beforeEach((to, from, next) => {
 
   if (!isPublic && !isLoggedIn) {
     return next({
-      path: '/login',
+      name: 'login',
+      replace: true,
       query: {redirectTo: to.fullPath}
     });
   }

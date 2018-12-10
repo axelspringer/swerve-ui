@@ -1,9 +1,15 @@
 <template>
-  <h1>Domain {{$route.params.domain}}</h1>
+  <div>
+    
+  </div>
 </template>
 
 <script>
 export default {
-  name: "domain"
+  
 }
 </script>
+
+<style>
+
+</style>

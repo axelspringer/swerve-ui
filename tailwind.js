@@ -169,7 +169,9 @@ module.exports = {
   */
 
   screens: {
-    'sm': '576px',
+    'xxs': {max: '320px'},
+    'xs': '480px',
+    'sm': {max: '576px'},
     'md': '768px',
     'lg': '992px',
     'xl': '1200px',
@@ -596,6 +598,8 @@ module.exports = {
   */
 
   maxWidth: {
+    'screen-sm': '576px',
+    'xxs': '10rem',
     'xs': '20rem',
     'sm': '30rem',
     'md': '40rem',
@@ -865,16 +869,16 @@ module.exports = {
   modules: {
     appearance: ['responsive'],
     backgroundAttachment: ['responsive'],
-    backgroundColors: ['responsive', 'hover', 'focus'],
+    backgroundColors: ['responsive', 'hover', 'focus', 'disabled'],
     backgroundPosition: ['responsive'],
     backgroundRepeat: ['responsive'],
     backgroundSize: ['responsive'],
     borderCollapse: [],
-    borderColors: ['responsive', 'hover', 'focus'],
+    borderColors: ['responsive', 'hover', 'focus', 'disabled'],
     borderRadius: ['responsive'],
     borderStyle: ['responsive'],
     borderWidths: ['responsive'],
-    cursor: ['responsive'],
+    cursor: ['responsive', 'disabled'],
     display: ['responsive'],
     flexbox: ['responsive'],
     float: ['responsive'],
@@ -903,16 +907,16 @@ module.exports = {
     svgStroke: [],
     tableLayout: ['responsive'],
     textAlign: ['responsive'],
-    textColors: ['responsive', 'hover', 'focus'],
+    textColors: ['responsive', 'hover', 'focus', 'disabled'],
     textSizes: ['responsive'],
-    textStyle: ['responsive', 'hover', 'focus'],
+    textStyle: ['responsive', 'hover', 'focus', 'disabled'],
     tracking: ['responsive'],
     userSelect: ['responsive'],
     verticalAlign: ['responsive'],
     visibility: ['responsive'],
     whitespace: ['responsive'],
     width: ['responsive'],
-    zIndex: ['responsive'],
+    zIndex: ['responsive']
   },
 
 
@@ -935,6 +939,13 @@ module.exports = {
       // center: true,
       // padding: '1rem',
     }),
+    function({addVariant}) {
+      addVariant('disabled', ({modifySelectors, separator}) => {
+        modifySelectors(({className}) => {
+          return `.disabled${separator}${className}:disabled`
+        })
+      })
+    }
   ],
 
 
