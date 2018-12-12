@@ -1,5 +1,8 @@
 <template>
-  <div id="swerve-ui" class="bg-blue-darker w-screen h-screen">
+  <div id="swerve-ui" class="bg-blue-darker w-screen h-full min-h-screen">
+    <header>
+
+    </header>
     <!--
     <div id="nav">
       <router-link to="/">Home</router-link> |
@@ -11,6 +14,9 @@
     <!--<transition name="slide-fade" mode="out-in">-->
       <router-view></router-view>
     <!--</transition>-->
+    <footer>
+
+    </footer>
   </div>
 </template>
 

@@ -1,19 +1,20 @@
 <template>
   <div>
     <h1>Domains</h1>
-
-    <ul>
-      <li><router-link to="/domains/123">123</router-link></li>
-      <li><router-link to="/domains/456">456</router-link></li>
-      <li><router-link to="/domains/789">789</router-link></li>
-    </ul>
-
-    <router-view></router-view>
+    <div class="flex h-full">
+      <domain-list class="w-1/4"></domain-list>
+      <router-view class="w-3/4"></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import DomainList from "./DomainList";
+
 export default {
-  name: "domains"
+  name: "domains",
+  components: {
+    DomainList
+  }
 }
 </script>

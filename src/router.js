@@ -21,14 +21,9 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "domains" */ "@/views/Domains.vue"),
       children: [
         {
-          path: "",
-          name: "domain-list",
-          component: () => import(/* webpackChunkName: "domain-list" */ "@/views/Domain.vue")
-        },
-        {
           path: ":domain",
-          name: "domain-detail",
-          component: () => import(/* webpackChunkName: "domain-detail" */ "@/views/Domain.vue")
+          name: "domain",
+          component: () => import(/* webpackChunkName: "domain-detail" */ "@/views/DomainDetail.vue")
         }
       ]
     },

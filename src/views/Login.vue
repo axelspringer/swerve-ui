@@ -34,9 +34,8 @@ export default {
         username: this.username, 
         password: this.password
       }).then(() => {
-        this.$router.push(this.$router.history.current.query.redirect || '/');
+        this.$router.push(this.$router.history.current.query.redirectTo || '/');
       }).catch(() => {
-        console.log("error");
         this.disabled = false;
       });
     }
