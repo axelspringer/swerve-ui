@@ -1,23 +1,23 @@
 <template>
   <div>
     <form @submit.prevent="save" @reset.prevent="cancel" class="max-w-md">
-      <fieldset class="mb-3 pb-4 border-b border-blue">
-        <legend class="text-blue text-lg font-bold mb-2">Basic Data</legend>
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Basic Data</legend>
         <div class="mb-4">
-          <label for="domain-field" class="block text-blue-lightest text-base font-bold mb-1 ml-px cursor-pointer">Domain</label>
-          <input type="url" name="domain-field" id="domain-field" placeholder="https://domain.com" v-model="domain" required class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none">
+          <label for="domain-field" class="form-label mb-1 ml-px">Domain</label>
+          <input type="url" name="domain-field" id="domain-field" placeholder="https://domain.com" v-model="domain.domain" required class="form-input">
         </div>
         <div class="mb-1">
-          <label for="redirect-field" class="block text-blue-lightest text-base font-bold mb-1 ml-px cursor-pointer">Redirect Target</label>
-          <input type="url" name="redirect-field" id="redirect-field" value="" placeholder="https://redirect-target.com" required class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none">
+          <label for="redirect-field" class="form-label mb-1 ml-px">Redirect Target</label>
+          <input type="url" name="redirect-field" id="redirect-field" v-model="domain.redirect" placeholder="https://redirect-target.com" required class="form-input">
         </div>
         <div class="flex mb-4">
-          <input type="checkbox" name="promotable-field" id="promotable-field" class="mr-2">
-          <label for="promotable-field" class="block text-blue-lightest text-base font-bold cursor-pointer">Include Path and Query-String <span class="text-xs">(optional)</span></label>
+          <input type="checkbox" name="promotable-field" id="promotable-field" class="mr-2" v-model="domain.promotable">
+          <label for="promotable-field" class="form-label">Include Path and Query-String <span class="text-xs">(optional)</span></label>
         </div>
         <div>
-          <label for="status-field" class="block text-blue-lightest text-base font-bold mb-1 ml-px cursor-pointer">HTTP Statuscode</label>
-          <select name="status-field" id="status-field" required class="bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none">
+          <label for="status-field" class="form-label mb-1 ml-px">HTTP Statuscode</label>
+          <select name="status-field" id="status-field" v-model="domain.status" required class="bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none">
             <option value="200">300 - Multiple Choices</option>
             <option value="301" selected>301 - Moved Permanently</option>
             <option value="302">302 - Found</option>
@@ -29,15 +29,15 @@
           </select>
         </div>
       </fieldset>
-      <fieldset class="mb-3 pb-4 border-b border-blue">
-        <legend class="text-blue text-lg font-bold mb-2">Paths</legend>
-        <domain-paths></domain-paths>
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Paths</legend>
+        <domain-paths :paths="domain.paths"></domain-paths>
       </fieldset>
-      <fieldset>
-        <legend class="text-blue text-lg font-bold mb-2">Additional Information</legend>
+      <fieldset class="form-fieldset">
+        <legend class="form-legend">Additional Information</legend>
         <div>
-          <label for="description-field" class="block text-blue-lightest text-base font-bold mb-1 ml-px cursor-pointer">Description <span class="text-xs">(optional)</span></label>
-          <textarea rows="5" id="description-field" name="description-field" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 mb-3 rounded focus:border-blue-light focus:outline-none appearance-none"></textarea>
+          <label for="description-field" class="form-label mb-1 ml-px">Description <span class="text-xs">(optional)</span></label>
+          <textarea rows="5" id="description-field" name="description-field" v-model="domain.description" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"></textarea>
         </div>
       </fieldset>
       <div class="flex justify-between">
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from "vuex";
+import {mapState, mapActions} from "vuex";
 import DomainPaths from "../components/DomainPaths";
 
 export default {
@@ -57,26 +57,51 @@ export default {
   components: {
     DomainPaths
   },
+  data() {
+    return {
+      domain: {}
+    }
+  },
   computed: {
-    domain: {
-      get() {
-        return '';
-      },
-      set(value) {
-
-      }
-    },
-    ...mapState('domains', [
-      'currentDomain'
+    ...mapState("domains", [
+      "currentDomain"
     ])
   },
   methods: {
+    ...mapActions("domains", [
+      "fetchOne",
+      "saveOne"
+    ]),
+    reset() {
+      this.domain = {
+        status: '301'
+      };
+    },
     save() {
-      console.log("save");
+      this.saveOne(this.domain);
     },
     cancel() {
-      console.log("cancel");
+      this.reset();
+    },
+    load(domain) {
+      this.fetchOne({domain}).then(response => {
+        this.domain = {
+          ...response.data
+        };
+      });
     }
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.reset();
+    this.load(to.params.domain);
+
+    next();
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.reset();
+      vm.load(to.params.domain);
+    });
   }
 }
 </script>

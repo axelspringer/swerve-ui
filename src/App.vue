@@ -1,20 +1,14 @@
 <template>
   <div id="swerve-ui" class="bg-blue-darker w-screen h-full min-h-screen">
-    <header>
-
+    <header class="flex px-2 items-center h-10 border-b border-blue-dark2 bg-blue-darkest">
+      <img src="./assets/logo.svg" class="w-8">
+      <pre class="text-blue-lighter font-bold font-sans">swərv</pre>
     </header>
-    <!--
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/domains">About</router-link>
-    </div>
-
-    -->
   
     <!--<transition name="slide-fade" mode="out-in">-->
       <router-view></router-view>
     <!--</transition>-->
-    <footer>
+    <footer class="flex px-2 items-center h-16 border-t border-blue-dark2 bg-blue-darkest">
 
     </footer>
   </div>

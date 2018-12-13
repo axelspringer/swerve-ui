@@ -11,8 +11,21 @@ const getters = {
 
 const actions = {
   async fetchOne({commit}, {domain}) {
-    console.log(domain);
-    
+    const response = await Promise.resolve({
+      data: {
+        id: domain,
+        domain: "https://foo.com",
+        redirect: "https://bar.com",
+        promotable: false,
+        paths: [
+          {from: "/baz", to: "/foo/bar"}
+        ],
+        description: "Some description",
+        status: "301"
+      }
+    });
+
+    return response;
   },
   async fetchList({commit}) {
     const response = await Promise.resolve({data: [
@@ -24,6 +37,9 @@ const actions = {
     commit('setDomains', response.data);
 
     return response;
+  },
+  async saveOne({commit}, data) {
+
   }
 };
 

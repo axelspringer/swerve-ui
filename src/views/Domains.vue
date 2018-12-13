@@ -1,10 +1,7 @@
 <template>
-  <div>
-    <h1>Domains</h1>
-    <div class="flex h-full">
-      <domain-list class="w-1/4"></domain-list>
-      <router-view class="w-3/4"></router-view>
-    </div>
+  <div class="flex h-full py-4">
+    <domain-list class="w-1/6"></domain-list>
+    <router-view class="w-5/6"></router-view>
   </div>
 </template>
 
