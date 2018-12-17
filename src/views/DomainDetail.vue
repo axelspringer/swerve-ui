@@ -31,18 +31,19 @@
       </fieldset>
       <fieldset class="form-fieldset">
         <legend class="form-legend">Paths</legend>
-        <domain-paths :paths="domain.paths"></domain-paths>
+        <domain-paths :paths="domain.paths" :target="domain.redirect"></domain-paths>
       </fieldset>
       <fieldset class="form-fieldset">
         <legend class="form-legend">Additional Information</legend>
         <div>
           <label for="description-field" class="form-label mb-1 ml-px">Description <span class="text-xs">(optional)</span></label>
-          <textarea rows="5" id="description-field" name="description-field" v-model="domain.description" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"></textarea>
+          <textarea rows="3" id="description-field" name="description-field" v-model="domain.description" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"></textarea>
         </div>
       </fieldset>
       <div class="flex justify-between">
-        <button class="text-white font-bold rounded py-2 px-4 bg-blue hover:bg-blue-light focus:border-blue-light focus:outline-none appearance-none" type="submit">Save</button>
-        <button class="text-white font-bold rounded py-2 px-4 hover:bg-grey-dark border focus:border-blue-light focus:outline-none appearance-none" type="reset">Cancel</button>
+        <button class="text-ebony-clay-2 font-bold rounded py-1 px-4 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">Save</button>
+        <button v-if="!isNew" @click.prevent="deleteDomain" class="text-ebony-clay-2 font-bold rounded py-1 px-4 bg-crimson hover:bg-cinnabar focus:border-blue-light focus:outline-none appearance-none">Delete Domain</button>
+        <button class="text-athens-gray font-bold rounded py-1 px-4 bg-oxford-blue hover:bg-grey-dark focus:border-blue-light focus:outline-none appearance-none" type="reset">Cancel</button>
       </div>
     </form>
   </div>
@@ -59,7 +60,8 @@ export default {
   },
   data() {
     return {
-      domain: {}
+      domain: {},
+      isNew: false
     }
   },
   computed: {
@@ -70,7 +72,8 @@ export default {
   methods: {
     ...mapActions("domains", [
       "fetchOne",
-      "saveOne"
+      "createOne",
+      "updateOne"
     ]),
     reset() {
       this.domain = {
@@ -78,10 +81,16 @@ export default {
       };
     },
     save() {
-      this.saveOne(this.domain);
+      if (this.isNew) {
+        this.saveOne(this.domain);
+        return;
+      }
+
+      this.updateOne(this.domain);
     },
     cancel() {
       this.reset();
+      this.$router.push({name: "domains"});
     },
     load(domain) {
       this.fetchOne({domain}).then(response => {
@@ -93,14 +102,24 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     this.reset();
-    this.load(to.params.domain);
+
+    this.isNew = to.params.domain === 'new';
+
+    if (!this.isNew) {
+      this.load(to.params.domain);
+    }
 
     next();
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.reset();
-      vm.load(to.params.domain);
+
+      vm.isNew = to.params.domain === 'new';
+
+      if (!vm.isNew) {
+        vm.load(to.params.domain);
+      }
     });
   }
 }

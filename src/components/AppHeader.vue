@@ -1,0 +1,29 @@
+<template>
+  <header class="flex justify-between px-2 items-center h-10 border-b border-blue-dark2 bg-blue-darkest">
+    <div class="flex items-center">
+      <img src="../assets/logo.svg" class="w-6">
+      <pre class="ml-1 text-blue-lighter font-bold font-sans">swərv</pre>
+    </div>
+    <div>
+      <button @click.prevent="logout" class="text-athens-gray text-sm font-bold rounded py-1 px-2 mr-4 bg-oxford-blue hover:bg-blue-light focus:border-blue-light focus:outline-none appearance-none" type="submit">Logout</button>
+    </div>
+  </header>
+</template>
+
+<script>
+import {mapMutations} from "vuex";
+
+export default {
+  name: "app-header",
+  methods: {
+    ...mapMutations('auth', [
+      'clearToken'
+    ]),
+    logout() {
+      console.log("logout");
+      this.clearToken();
+      this.$router.push({name: "login"});
+    }
+  }
+}
+</script>

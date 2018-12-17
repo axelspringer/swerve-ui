@@ -1,4 +1,4 @@
-import {httpGet} from "../services/api";
+import {httpGet, httpPost, httpPut, httpDelete} from "../services/api";
 
 const state = {
   currentDomain: null,
@@ -38,7 +38,13 @@ const actions = {
 
     return response;
   },
-  async saveOne({commit}, data) {
+  async updateOne({commit}, data) {
+    
+  },
+  async createOne({commit}, data) {
+
+  },
+  async deleteOne({commit}, data) {
 
   }
 };

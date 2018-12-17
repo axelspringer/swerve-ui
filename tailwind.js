@@ -54,7 +54,6 @@ let colors = {
   'grey-light': '#dae1e7',
   'grey-lighter': '#f1f5f8',
   'grey-lightest': '#f8fafc',
-  'white': '#ffffff',
 
   'red-darkest': '#3b0d0c',
   'red-darker': '#621b18',
@@ -129,6 +128,29 @@ let colors = {
   'pink-lighter': '#ffbbca',
   'pink-lightest': '#ffebef',
 
+  /**
+   * Taken from https://www.vuedarkmode.com/#colors
+   */
+  'portage': '#AB7EF6',
+  'azure-radiance': '#0194EF',
+  'dodger-blue': '#2EA2F9',
+  'java': '#26C2C9',
+  'apple': '#4FCF3F',
+  'malachite': '#1BB934',
+  'crimson': '#E1112C',
+  'cinnabar': '#E54124',
+  'sunglow': '#FFC02A',
+  'sun': '#FFB610',
+  'barley-white': '#FFF5CD',
+  'athens-gray': '#FAFBFC',
+  'white': '#FFFFFF',
+  'regent-st-blue': '#A9C7DF',
+  'nepal': '#8EACC5',
+  'oxford-blue': '#323E4F',
+  'ebony-clay': '#232D3D',
+  'ebony-clay-2': '#283243',
+  'mirage': '#1C2532',
+  'woodsmoke': '#18191A'
 }
 
 module.exports = {

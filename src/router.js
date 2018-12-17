@@ -18,6 +18,7 @@ const router = new Router({
     },
     {
       path: "/domains",
+      name: "domains",
       component: () => import(/* webpackChunkName: "domains" */ "@/views/Domains.vue"),
       children: [
         {

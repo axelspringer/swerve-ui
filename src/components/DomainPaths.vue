@@ -3,20 +3,29 @@
     <div v-if="!showForm">
       <ul class="list-reset">
         <li class="flex mb-1 pb-1 border-b border-blue-dark2" v-for="path of paths" :key="path.from + path.to">
-          <div>
-            <div class="text-blue-lightest text-base font-bold mr-1 mb-1">From</div>
-            <div class="text-blue-lightest text-base font-bold mr-1">To</div>
-          </div>
           <div class="flex-1">
-            <div class="text-white">/some/from/path</div>
-            <div class="text-white">/some/to/path</div>
+            <div class="text-blue-lightest text-base font-bold mr-1 mb-1 flex">
+              <div class="inline-block w-12">From</div>
+              <div class="text-white">
+                <div>/from/some/path</div>
+                <div class="text-xs text-nepal">{{target}}/from/some/path</div>
+              </div>
+            </div>
+            <div class="text-blue-lightest text-base font-bold mr-1 flex">
+              <div class="inline-block w-12">To</div>
+              <div class="text-white">
+                <div>/to/some/path</div>
+                <div class="text-xs text-nepal">{{target}}/to/some/path</div>
+              </div>
+            </div>
           </div>
           <div class="self-center">
-            <button @click.prevent="edit" class="text-white text-xs font-bold rounded py-2 px-4 bg-blue hover:bg-blue-light focus:border-blue-light focus:outline-none appearance-none" type="submit">Edit</button>
+            <button @click.prevent="remove" class="text-athens-gray text-sm font-bold rounded py-1 px-2 mr-4 bg-oxford-blue hover:bg-nepal hover:text-ebony-clay-2 focus:border-blue-light focus:outline-none appearance-none" type="submit">Remove</button>
+            <button @click.prevent="edit" class="text-ebony-clay-2 text-sm font-bold rounded py-1 px-2 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">Edit</button>
           </div>
         </li>
       </ul>
-      <button @click.prevent="showForm = true" class="text-white font-bold rounded py-2 px-4 bg-blue hover:bg-blue-light focus:border-blue-light focus:outline-none appearance-none" type="submit">New Path</button>
+      <button @click.prevent="showForm = true" class="text-ebony-clay-2 font-bold text-sm rounded py-1 px-2 mt-2 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">New Path</button>
     </div>
     <div v-if="showForm">
       <div class="mb-1">
@@ -29,7 +38,7 @@
       </div>
       <div class="flex justify-between">
         <button @click.prevent="add" class="text-white font-bold rounded py-2 px-4 bg-blue hover:bg-blue-light focus:border-blue-light focus:outline-none appearance-none" type="submit">Add</button>
-        <button @click.prevent="cancel" class="text-white font-bold rounded py-2 px-4 hover:bg-grey-dark border focus:border-blue-light focus:outline-none appearance-none" type="reset">Cancel</button>
+        <button @click.prevent="cancel" class="text-athens-gray font-bold rounded py-2 px-4 bg-oxford-blue hover:bg-grey-dark focus:border-blue-light focus:outline-none appearance-none" type="reset">Cancel</button>
       </div>
     </div>
   </div>
@@ -44,6 +53,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    target: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -63,8 +76,11 @@ export default {
     },
     edit() {
       this.showForm = true;
-      this.from = "/some/from/path";
-      this.to = "/some/to/path";
+      this.from = "/from/some/path";
+      this.to = "/to/some/path";
+    },
+    remove() {
+
     }
   }
 }
