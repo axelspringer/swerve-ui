@@ -1,7 +1,19 @@
-import {httpGet, httpPost, httpPut, httpDelete} from "../services/api";
+import {read, create, update, remove} from "api-client";
+import Vue from "vue";
+
+/**
+ * @typedef {Object} Domain
+ * @property {Number} id
+ * @property {String} domain
+ * @property {String} redirect
+ */
+
+/**
+ * @typedef {Object} DomainState
+ * @property {Domain[]} domains
+ */
 
 const state = {
-  currentDomain: null,
   domains: []
 };
 
@@ -10,39 +22,33 @@ const getters = {
 };
 
 const actions = {
-  async fetchOne({commit}, {domain}) {
-    const response = await Promise.resolve({
-      data: {
-        id: domain,
-        domain: "https://foo.com",
-        redirect: "https://bar.com",
-        promotable: false,
-        paths: [
-          {from: "/baz", to: "/foo/bar"}
-        ],
-        description: "Some description",
-        status: "301"
-      }
-    });
+  async fetchOne({commit}, {id}) {
+    let response = await read(`https://api.swerve.tortuga.cloud/domains/${id}`);
+
+    if (!response) {
+      response = {data: {}};
+    }
 
     return response;
   },
   async fetchList({commit}) {
-    const response = await Promise.resolve({data: [
-      {ID: '1', Domain: 'foo.com'},
-      {ID: '2', Domain: 'bar.com'},
-      {ID: '3', Domain: 'baz.com'},
-    ]});
+    const response = await read("https://api.swerve.tortuga.cloud/domains");
 
-    commit('setDomains', response.data);
+    commit('setDomains', response.data || []);
 
     return response;
   },
   async updateOne({commit}, data) {
-    
+    const response = await update(`https://api.swerve.tortuga.cloud/domains/${data.id}`, data);
+
+    return response;
   },
   async createOne({commit}, data) {
+    const response = await create('https://api.swerve.tortuga.cloud/domains', data);
 
+    commit("addDomain", response.data);
+
+    return response;
   },
   async deleteOne({commit}, data) {
 
@@ -50,12 +56,20 @@ const actions = {
 };
 
 const mutations = {
-  setCurrentDomain(state, domain) {
-    state.currentDomain = domain;
-  },
+  /**
+   * @param {DomainState} state 
+   * @param {Domain[]} domains 
+   */
   setDomains(state, domains) {
     state.domains = domains;
-  }
+  },
+  /**
+   * @param {DomainState} state 
+   * @param {Domain} domain 
+   */
+  addDomain(state, domain) {
+    state.domains.push(domain);
+  },
 };
 
 export default {

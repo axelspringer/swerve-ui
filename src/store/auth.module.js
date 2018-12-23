@@ -1,4 +1,4 @@
-import {httpPost} from "../services/api";
+import {create} from "api-client";
 import {getToken, setToken, clearToken} from "../services/token";
 
 
@@ -14,7 +14,7 @@ const actions = {
   async fetchToken({commit}, {username, password}) {
     try {
       /*
-      const response = await httpPost("https://some.api.endpoint", {
+      const response = await create("https://some.api.endpoint", {
         username,
         password
       });

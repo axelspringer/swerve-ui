@@ -2,8 +2,8 @@
   <div class="px-2">
     <h2 class="text-blue text-lg font-bold">Domains</h2>
     <ul class="list-reset">
-      <router-link v-for="domain of domains" :key="domain.ID" tag="li" :to="{name: 'domain', params: {domain: domain.ID}}" class="router-link">
-        <a class="text-white no-underline">{{domain.Domain}}</a>
+      <router-link v-for="domain of domains" :key="domain.id" tag="li" :to="{name: 'domain', params: {domain: domain.id}}" class="router-link">
+        <a class="text-white no-underline">{{domain.domain}}</a>
       </router-link>
     </ul>
     <div>

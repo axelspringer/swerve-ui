@@ -8,7 +8,7 @@ const handleError = response => {
 
 const toJSON = response => response.json();
 
-const httpRequest = (resource, options = {}) => {
+const request = (resource, options = {}) => {
   return fetch(resource, {
     method: "GET",
     ...options
@@ -24,8 +24,8 @@ const httpRequest = (resource, options = {}) => {
  * 
  * @returns {Promise}
  */
-const httpGet = (resource) => {
-  return httpRequest(resource, {
+const read = resource => {
+  return request(resource, {
     method: 'GET'
   });
 };
@@ -37,8 +37,8 @@ const httpGet = (resource) => {
  * 
  * @returns {Promise}
  */
-const httpPost = (resource, data) => {
-  return httpRequest(resource, {
+const create = (resource, data) => {
+  return request(resource, {
     method: 'POST',
     data: JSON.stringify(data)
   });
@@ -50,8 +50,8 @@ const httpPost = (resource, data) => {
  * 
  * @returns {Promise}
  */
-const httpDelete = (resource) => {
-  return httpRequest(resource, {
+const remove = resource => {
+  return request(resource, {
     method: "DELETE"
   });
 };
@@ -62,11 +62,11 @@ const httpDelete = (resource) => {
  * 
  * @return {Promise}
  */
-const httpPut = (resource, data) => {
-  return httpRequest(resource, {
+const update = (resource, data) => {
+  return request(resource, {
     method: "PUT",
     data: JSON.stringify(data)
   });
 };
 
-export { httpGet, httpPost, httpPut, httpDelete, httpRequest };
+export { read, create, update, remove };

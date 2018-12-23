@@ -11,7 +11,9 @@ export default new Vuex.Store({
     auth,
     domains
   },
-  state: {},
+  state: {
+    isLoading: false
+  },
   mutations: {},
   actions: {}
 });
