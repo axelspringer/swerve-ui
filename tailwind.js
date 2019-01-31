@@ -845,9 +845,7 @@ module.exports = {
   |
   */
 
-  svgFill: {
-    'current': 'currentColor',
-  },
+  svgFill: global.Object.assign({ current: 'currentColor' }, colors),
 
 
   /*

@@ -42,9 +42,9 @@
         </div>
       </fieldset>
       <div class="flex justify-between">
-        <button class="text-ebony-clay-2 font-bold rounded py-1 px-4 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">Save</button>
-        <button v-if="!isNew" @click.prevent="deleteDomain" class="text-ebony-clay-2 font-bold rounded py-1 px-4 bg-crimson hover:bg-cinnabar focus:border-blue-light focus:outline-none appearance-none">Delete Domain</button>
-        <button class="text-athens-gray font-bold rounded py-1 px-4 bg-oxford-blue hover:bg-grey-dark focus:border-blue-light focus:outline-none appearance-none" type="reset">Cancel</button>
+        <button class="button button-primary" type="submit">Save</button>
+        <button v-if="!isNew" @click.prevent="deleteDomain" class="button bg-crimson hover:bg-cinnabar">Delete Domain</button>
+        <button class="button button-secondary" type="reset">Cancel</button>
       </div>
     </form>
   </div>
@@ -71,6 +71,9 @@ export default {
       "createOne",
       "updateOne"
     ]),
+    ...mapMutations([
+      "addNotification"
+    ]),
     reset() {
       this.domain = {};
     },
@@ -80,7 +83,12 @@ export default {
         return;
       }
 
-      this.updateOne(this.domain);
+      this.updateOne(this.domain).then(() => {
+        this.addNotification({
+          type: "success",
+          text: "Domain updated"
+        });
+      });
     },
     cancel() {
       this.reset();

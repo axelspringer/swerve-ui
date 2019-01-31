@@ -1,6 +1,7 @@
 <template>
   <div id="swerve-ui" class="flex flex-col bg-blue-darker w-screen h-full min-h-screen">
     <loading-bar v-if="isLoading"></loading-bar>
+    <notifications-bar class="mt-4 z-10"></notifications-bar>
     <app-header></app-header>
   
     <!--<transition name="slide-fade" mode="out-in">-->
@@ -15,11 +16,13 @@ import {mapState} from "vuex";
 
 import AppHeader from "./components/AppHeader";
 import LoadingBar from "./components/LoadingBar";
+import NotificationsBar from "./components/NotificationsBar";
 
 export default {
   components: {
     AppHeader,
-    LoadingBar
+    LoadingBar,
+    NotificationsBar
   },
   computed: {
     ...mapState(['isLoading'])

@@ -6,7 +6,7 @@
       <input type="text" name="username" id="username-input" v-model="username" required placeholder="admin" autofocus autocomplete="off" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 mb-3 rounded focus:border-blue-light focus:outline-none appearance-none">
       <label for="password-input" class="block text-blue-lightest text-base font-bold mb-1 cursor-pointer ml-1">Password</label>
       <input type="password" name="password" id="password-input" v-model="password" required placeholder="admin" autocomplete="off" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 mb-3 rounded focus:border-blue-light focus:outline-none appearance-none">
-      <button :disabled="disabled" class="text-white font-bold rounded py-2 px-4 bg-blue hover:bg-blue-light ml-1 sm:w-full disabled:bg-grey-dark disabled:cursor-not-allowed disabled:text-grey-darkest" type="submit">Login</button>
+      <button :disabled="disabled" class="button button-primary ml-1 sm:w-full disabled:bg-grey-dark disabled:cursor-not-allowed disabled:text-grey-darkest" type="submit">Login</button>
     </form>
   </transition>
   </div>

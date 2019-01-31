@@ -7,7 +7,7 @@
       </router-link>
     </ul>
     <div>
-      <router-link to="/domains/new" class="inline-block text-ebony-clay-2 font-bold rounded py-1 px-4 mt-4 no-underline bg-sun hover:bg-sunglow focus:border-sun focus:outline-none">New Domain</router-link>
+      <router-link to="/domains/new" class="button button-primary inline-block mt-4 no-underline">New Domain</router-link>
     </div>
   </div>
 </template>
@@ -25,10 +25,7 @@ export default {
   methods: {
     ...mapActions('domains', [
       'fetchList'
-    ]),
-    newEntry() {
-
-    }
+    ])
   },
   created() {
     this.fetchList();

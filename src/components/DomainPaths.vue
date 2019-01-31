@@ -20,12 +20,12 @@
             </div>
           </div>
           <div class="self-center">
-            <button @click.prevent="remove(path)" class="text-athens-gray text-sm font-bold rounded py-1 px-2 mr-4 bg-oxford-blue hover:bg-nepal hover:text-ebony-clay-2 focus:border-blue-light focus:outline-none appearance-none" type="submit">Remove</button>
-            <button @click.prevent="edit(path)" class="text-ebony-clay-2 text-sm font-bold rounded py-1 px-2 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">Edit</button>
+            <button @click.prevent="remove(path)" class="button button-secondary button-small mr-4" type="submit">Remove</button>
+            <button @click.prevent="edit(path)" class="button button-primary button-small" type="submit">Edit</button>
           </div>
         </li>
       </ul>
-      <button @click.prevent="create" class="text-ebony-clay-2 font-bold text-sm rounded py-1 px-2 mt-2 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">New Path</button>
+      <button @click.prevent="create" class="button button-primary button-small" type="submit">New Path</button>
     </div>
     <div v-if="showForm">
       <div class="mb-1">
@@ -37,7 +37,7 @@
         <input v-model="to" type="text" name="to-field" id="to-field" placeholder="/to/path" class="form-input">
       </div>
       <div class="flex justify-between">
-        <button @click.prevent="add" class="text-ebony-clay-2 text-sm font-bold rounded py-1 px-4 bg-sun hover:bg-sunglow focus:border-sun focus:outline-none appearance-none" type="submit">{{saveLabel}}</button>
+        <button @click.prevent="add" class="button button-primary button-small" type="submit">{{saveLabel}}</button>
         <button @click.prevent="cancel" class="text-athens-gray text-sm font-bold rounded py-1 px-4 bg-oxford-blue hover:bg-grey-dark focus:border-blue-light focus:outline-none appearance-none" type="reset">Cancel</button>
       </div>
     </div>
@@ -85,7 +85,7 @@ export default {
 
         return;
       }
-      
+
       this.$emit('update', {
         from: this.from,
         to: this.to,

@@ -37,6 +37,7 @@
   */
   @import "./assets/css/forms.pcss";
   @import "./assets/css/links.pcss";
+  @import "./assets/css/buttons.pcss";
  
  /**
   * This injects all of Tailwind's utility classes, generated based on your

@@ -5,7 +5,7 @@
       <pre class="ml-1 text-blue-lighter font-bold font-sans">swərv</pre>
     </div>
     <div>
-      <button @click.prevent="logout" class="text-athens-gray text-sm font-bold rounded py-1 px-2 mr-4 bg-oxford-blue hover:bg-blue-light focus:border-blue-light focus:outline-none appearance-none" type="submit">Logout</button>
+      <button @click.prevent="logout" class="button button-secondary button-small mr-4" type="submit">Logout</button>
     </div>
   </header>
 </template>

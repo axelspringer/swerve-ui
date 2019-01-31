@@ -5,6 +5,16 @@ import domains from "./domains.module";
 
 Vue.use(Vuex);
 
+const mutations = {
+  addNotification(state, notification) {
+    notification.id = new Date().getTime();
+    state.notifications.unshift(notification);
+  },
+  removeNotification(state, notification) {
+    state.notifications = state.notifications.filter(n => n !== notification);
+  }
+};
+
 export default new Vuex.Store({
   strict: true,
   modules: {
@@ -12,8 +22,9 @@ export default new Vuex.Store({
     domains
   },
   state: {
-    isLoading: false
+    isLoading: false,
+    notifications: []
   },
-  mutations: {},
+  mutations,
   actions: {}
 });
