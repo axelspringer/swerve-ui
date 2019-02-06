@@ -1,5 +1,4 @@
 const handleError = response => {
-
   if (!response.ok) {
     throw new Error(response.statusText);
   }
@@ -7,7 +6,7 @@ const handleError = response => {
   return response;
 };
 
-const toJSON = text => text.length ? JSON.parse(text) : {};
+const toJSON = text => (text.length ? JSON.parse(text) : {});
 
 const toText = response => response.text();
 
@@ -16,42 +15,42 @@ const request = (resource, options = {}) => {
     method: "GET",
     ...options
   })
-  .then(handleError)
-  .then(toText)
-  .then(toJSON)
-  .catch(error => console.log(error))
+    .then(handleError)
+    .then(toText)
+    .then(toJSON)
+    .catch(error => console.log(error));
 };
 
 /**
- * 
- * @param {string} resource 
- * 
+ *
+ * @param {string} resource
+ *
  * @returns {Promise}
  */
 const read = resource => {
   return request(resource, {
-    method: 'GET'
+    method: "GET"
   });
 };
 
 /**
- * 
- * @param {string} resource 
- * @param {*} data 
- * 
+ *
+ * @param {string} resource
+ * @param {*} data
+ *
  * @returns {Promise}
  */
 const create = (resource, data) => {
   return request(resource, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(data)
   });
 };
 
 /**
- * 
- * @param {string} resource 
- * 
+ *
+ * @param {string} resource
+ *
  * @returns {Promise}
  */
 const remove = resource => {
@@ -61,15 +60,15 @@ const remove = resource => {
 };
 
 /**
- * 
- * @param {string} resource 
- * 
+ *
+ * @param {string} resource
+ *
  * @return {Promise}
  */
 const update = (resource, data) => {
   return request(resource, {
     method: "PUT",
-    data: JSON.stringify(data)
+    body: JSON.stringify(data)
   });
 };
 

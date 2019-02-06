@@ -9,11 +9,11 @@ import Vue from "vue";
  * @property {Path[]} paths
  */
 
- /**
-  * @typedef {Object} Path
-  * @property {String} from
-  * @property {String} to
-  */
+/**
+ * @typedef {Object} Path
+ * @property {String} from
+ * @property {String} to
+ */
 
 /**
  * @typedef {Object} DomainState
@@ -59,7 +59,7 @@ const actions = {
     return response;
   },
   async deleteOne({ commit }, data) {
-    const response = await remove(`${endpoint}/${data.id}`)
+    const response = await remove(`${endpoint}/${data.id}`);
 
     return response;
   }

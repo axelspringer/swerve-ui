@@ -33,7 +33,8 @@
             class="mr-2"
             v-model="domain.promotable"
           >
-          <label for="promotable-field" class="form-label">Include Path and Query-String
+          <label for="promotable-field" class="form-label">
+            Include Path and Query-String
             <span class="text-xs">(optional)</span>
           </label>
         </div>
@@ -71,7 +72,8 @@
       <fieldset class="form-fieldset">
         <legend class="form-legend">Additional Information</legend>
         <div>
-          <label for="description-field" class="form-label mb-1 ml-px">Description
+          <label for="description-field" class="form-label mb-1 ml-px">
+            Description
             <span class="text-xs">(optional)</span>
           </label>
           <textarea
@@ -129,19 +131,22 @@ export default {
     },
     save() {
       if (this.isNew) {
-        this.createOne(this.domain).then(() =>
-        {
+        this.createOne(this.domain).then(() => {
+          this.addNotification({
+            type: "success",
+            text: "Domain created"
+          })
           this.reload();
         });
         return;
       } else
-
-      this.updateOne(this.domain).then(() => {
-        this.addNotification({
-          type: "success",
-          text: "Domain updated"
+        this.updateOne(this.domain).then(() => {
+          this.addNotification({
+            type: "success",
+            text: "Domain updated"
+          })
+          this.reload();
         });
-      });
     },
     cancel() {
       this.reset();
@@ -150,7 +155,13 @@ export default {
     deleteDomain() {
       this.deleteOne({
         id: this.domain.id
-      }).then(() => this.reload());
+      }).then(() => {
+          this.addNotification({
+            type: "success",
+            text: "Domain deleted"
+          })
+          this.reload();
+        });
     },
     load(id) {
       this.fetchOne({ id }).then(response => {
@@ -162,9 +173,9 @@ export default {
       });
     },
     loadNew() {
-        this.domain = {
-          paths: []
-        };
+      this.domain = {
+        paths: []
+      };
     },
     addPath(path) {
       this.domain.paths.push(path);
