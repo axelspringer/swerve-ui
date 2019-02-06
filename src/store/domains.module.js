@@ -6,7 +6,14 @@ import Vue from "vue";
  * @property {Number} id
  * @property {String} domain
  * @property {String} redirect
+ * @property {Path[]} paths
  */
+
+ /**
+  * @typedef {Object} Path
+  * @property {String} from
+  * @property {String} to
+  */
 
 /**
  * @typedef {Object} DomainState
@@ -48,8 +55,6 @@ const actions = {
   },
   async createOne({ commit }, data) {
     const response = await create(endpoint, data);
-
-    commit("addDomain", response.data);
 
     return response;
   },
