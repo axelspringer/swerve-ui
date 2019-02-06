@@ -1,3 +1,24 @@
+const handleError = response => {
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response;
+};
+
+const toJSON = response => response.json();
+
+const request = (resource, options = {}) => {
+  return fetch(resource, {
+    method: "GET",
+    ...options
+  })
+  .then(handleError)
+  .then(toJSON)
+  .catch(error => console.log(error))
+};
+
 /**
  * 
  * @param {string} resource 
@@ -5,16 +26,8 @@
  * @returns {Promise}
  */
 const read = resource => {
-  let data = JSON.parse(localStorage.getItem(resource));
-
-  if (resource === "https://api.swerve.tortuga.cloud/domains") {
-    data = Object.keys(localStorage)
-      .filter(key => key.startsWith("https://api.swerve.tortuga.cloud/domains"))
-      .map(key => JSON.parse(localStorage.getItem(key)));
-  }
-
-  return Promise.resolve({
-    data
+  return request(resource, {
+    method: 'GET'
   });
 };
 
@@ -26,17 +39,9 @@ const read = resource => {
  * @returns {Promise}
  */
 const create = (resource, data) => {
-  const id = Math.floor(Math.random() * 1000000);
-  const payload = {
-    ...data,
-    id
-  };
-  const storageKey = resource + '/' + id;
-
-  localStorage.setItem(storageKey, JSON.stringify(payload));
-  
-  return Promise.resolve({
-    data: payload
+  return request(resource, {
+    method: 'POST',
+    data: JSON.stringify(data)
   });
 };
 
@@ -46,11 +51,9 @@ const create = (resource, data) => {
  * 
  * @returns {Promise}
  */
-const remove = (resource) => {
-  localStorage.removeItem(resource);
-
-  return Promise.resolve({
-
+const remove = resource => {
+  return request(resource, {
+    method: "DELETE"
   });
 };
 
@@ -61,10 +64,9 @@ const remove = (resource) => {
  * @return {Promise}
  */
 const update = (resource, data) => {
-  localStorage.setItem(resource, JSON.stringify(data));
-  
-  return Promise.resolve({
-    data
+  return request(resource, {
+    method: "PUT",
+    data: JSON.stringify(data)
   });
 };
 
