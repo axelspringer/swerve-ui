@@ -53,7 +53,11 @@ const actions = {
 
     return response;
   },
-  async deleteOne({ commit }, data) {}
+  async deleteOne({ commit }, data) {
+    const response = await remove(`${endpoint}/${data.id}`)
+
+    return response;
+  }
 };
 
 const mutations = {

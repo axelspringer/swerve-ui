@@ -69,7 +69,9 @@ export default {
     ...mapActions("domains", [
       "fetchOne",
       "createOne",
-      "updateOne"
+      "updateOne",
+      "deleteOne",
+      "fetchList",
     ]),
     ...mapMutations([
       "addNotification"
@@ -95,7 +97,12 @@ export default {
       this.$router.push({name: "domains"});
     },
     deleteDomain() {
-
+      this.deleteOne({
+        id: this.domain.id
+      }).then(() => {
+        this.fetchList();
+        this.cancel();
+      });
     },
     load(id) {
       this.fetchOne({id}).then(response => {

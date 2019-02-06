@@ -7,7 +7,9 @@ const handleError = response => {
   return response;
 };
 
-const toJSON = response => response.json();
+const toJSON = text => text.length ? JSON.parse(text) : {};
+
+const toText = response => response.text();
 
 const request = (resource, options = {}) => {
   return fetch(resource, {
@@ -15,6 +17,7 @@ const request = (resource, options = {}) => {
     ...options
   })
   .then(handleError)
+  .then(toText)
   .then(toJSON)
   .catch(error => console.log(error))
 };
