@@ -126,7 +126,13 @@ export default {
       this.domain = {};
     },
     reload() {
-      this.fetchList();
+      this.fetchList().catch(err => {
+          console.log("err creating:", err);
+          this.addNotification({
+            type: "failure",
+            text: "Domains could not be loaded"
+          })
+          });
       this.cancel();
     },
     save() {
@@ -137,7 +143,13 @@ export default {
             text: "Domain created"
           })
           this.reload();
-        });
+        }).catch(err => {
+          console.log("err creating:", err);
+          this.addNotification({
+            type: "failure",
+            text: "Domain could not be created"
+          })
+          });
         return;
       } else
         this.updateOne(this.domain).then(() => {
@@ -146,7 +158,13 @@ export default {
             text: "Domain updated"
           })
           this.reload();
-        });
+        }).catch(err => {
+          console.log("err creating:", err);
+          this.addNotification({
+            type: "failure",
+            text: "Domain could not be updated"
+          })
+          });;
     },
     cancel() {
       this.reset();
@@ -161,7 +179,13 @@ export default {
             text: "Domain deleted"
           })
           this.reload();
-        });
+        }).catch(err => {
+          console.log("err creating:", err);
+          this.addNotification({
+            type: "failure",
+            text: "Domain could not be deleted"
+          })
+          });;
     },
     load(id) {
       this.fetchOne({ id }).then(response => {
@@ -170,7 +194,13 @@ export default {
           code: "301",
           ...response.data
         };
-      });
+      }).catch(err => {
+          console.log("err creating:", err);
+          this.addNotification({
+            type: "failure",
+            text: "Domain could not be loaded"
+          })
+          });;
     },
     loadNew() {
       this.domain = {

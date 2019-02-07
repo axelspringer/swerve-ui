@@ -18,7 +18,6 @@ const request = (resource, options = {}) => {
     .then(handleError)
     .then(toText)
     .then(toJSON)
-    .catch(error => console.log(error));
 };
 
 /**

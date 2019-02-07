@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import {mapState, mapActions, mapMutations} from "vuex";
 
 export default {
   name: "domain-list",
@@ -25,10 +25,17 @@ export default {
   methods: {
     ...mapActions('domains', [
       'fetchList'
-    ])
+    ]),
+    ...mapMutations(["addNotification"]),
   },
   created() {
-    this.fetchList();
+    this.fetchList().catch(err => {
+          console.log("err creating:", err);
+          this.addNotification({
+            type: "failure",
+            text: "Domains could not be loaded"
+          })
+          });
   }
 }
 </script>
