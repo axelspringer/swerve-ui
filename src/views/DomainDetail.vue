@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="save" @reset.prevent="cancel" class="max-w-md">
+    <form @submit.prevent="save" @reset.prevent="cancel" class="mx-16 inline-block w-1/2">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Basic Data</legend>
         <div class="mb-4">
@@ -8,7 +8,7 @@
           <input
             name="domain-field"
             id="domain-field"
-            placeholder="https://domain.com"
+            placeholder="domain.com"
             v-model="domain.domain"
             required
             class="form-input"
@@ -20,7 +20,7 @@
             name="redirect-field"
             id="redirect-field"
             v-model="domain.redirect"
-            placeholder="https://redirect.com"
+            placeholder="redirect.com"
             required
             class="form-input"
           >
@@ -30,7 +30,7 @@
             type="checkbox"
             name="promotable-field"
             id="promotable-field"
-            class="mr-2"
+            class="mr-2 bg-blue-dark"
             v-model="domain.promotable"
           >
           <label for="promotable-field" class="form-label">

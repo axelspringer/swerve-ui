@@ -1,7 +1,7 @@
 <template>
-  <div class="flex h-full py-4">
-    <domain-list class="w-1/6"></domain-list>
-    <router-view class="w-5/6"></router-view>
+  <div class="h-full flex text-center py-4">
+    <domain-list class="w-1/5"></domain-list>
+    <router-view class="w-3/5"></router-view>
   </div>
 </template>
 
