@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="save" @reset.prevent="cancel" class="mx-16 inline-block w-1/2">
+    <form @submit.prevent="save" @reset.prevent="cancel" class="w-full">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Basic Data</legend>
         <div class="mb-4">
