@@ -1,9 +1,9 @@
 <template>
   <div class="px-2">
     <h2 class="text-blue text-lg font-bold mb-1">Domains</h2>
-    <div class="overflow-auto h-24 md:h-auto">
+    <div class="overflow-auto h-24 md:h-64">
     <ul class="list-reset">
-      <router-link v-for="domain of domains" :key="domain.id" tag="li" :to="{name: 'domain', params: {domain: domain.id}}" class="router-link">
+      <router-link v-for="domain of orderedDomains" :key="domain.id" tag="li" :to="{name: 'domain', params: {domain: domain.id}}" class="router-link">
         <a class="text-white no-underline">{{domain.domain}}</a>
       </router-link>
     </ul>
@@ -22,7 +22,14 @@ export default {
   computed: {
     ...mapState('domains', [
       'domains'
-    ])
+    ]),
+    orderedDomains: function() {
+      return this.domains.sort(function(a,b) {
+        if (a.domain < b.domain) return -1;
+        if (a.domain > b.domain) return 1;
+        return 0;
+      })
+    }
   },
   methods: {
     ...mapActions('domains', [
