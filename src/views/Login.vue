@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapMutations} from "vuex";
 
 export default {
   data() {
@@ -27,6 +27,7 @@ export default {
     ...mapActions('auth', [
       'fetchToken'
     ]),
+    ...mapMutations(["addNotification"]),
     onSubmit() {
       this.disabled = true;
 
@@ -36,6 +37,10 @@ export default {
       }).then(() => {
         this.$router.push(this.$router.history.current.query.redirectTo || '/');
       }).catch(() => {
+        this.addNotification({
+            type: "failure",
+            text: "Login failed",
+          })
         this.disabled = false;
       });
     }

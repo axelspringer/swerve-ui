@@ -43,7 +43,7 @@ export default {
           this.addNotification({
             type: "failure",
             text: "Domains could not be loaded"
-          })
+          });
           });
   }
 }
