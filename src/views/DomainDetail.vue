@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import DomainPaths from "../components/DomainPaths";
 
 export default {
@@ -126,45 +126,46 @@ export default {
       this.domain = {};
     },
     reload() {
-      this.fetchList().catch(err => {
-          console.log("err creating:", err);
-          this.addNotification({
-            type: "failure",
-            text: "Domains could not be loaded"
-          })
-          });
+      this.fetchList().catch(() => {
+        this.addNotification({
+          type: "failure",
+          text: "Domains could not be loaded"
+        });
+      });
       this.cancel();
     },
     save() {
       if (this.isNew) {
-        this.createOne(this.domain).then(() => {
-          this.addNotification({
-            type: "success",
-            text: "Domain created"
+        this.createOne(this.domain)
+          .then(() => {
+            this.addNotification({
+              type: "success",
+              text: "Domain created"
+            });
+            this.reload();
           })
-          this.reload();
-        }).catch(err => {
-          console.log("err creating:", err);
-          this.addNotification({
-            type: "failure",
-            text: "Domain could not be created"
-          })
+          .catch(() => {
+            this.addNotification({
+              type: "failure",
+              text: "Domain could not be created"
+            });
           });
         return;
       } else
-        this.updateOne(this.domain).then(() => {
-          this.addNotification({
-            type: "success",
-            text: "Domain updated"
+        this.updateOne(this.domain)
+          .then(() => {
+            this.addNotification({
+              type: "success",
+              text: "Domain updated"
+            });
+            this.reload();
           })
-          this.reload();
-        }).catch(err => {
-          console.log("err creating:", err);
-          this.addNotification({
-            type: "failure",
-            text: "Domain could not be updated"
-          })
-          });;
+          .catch(() => {
+            this.addNotification({
+              type: "failure",
+              text: "Domain could not be updated"
+            });
+          });
     },
     cancel() {
       this.reset();
@@ -173,34 +174,36 @@ export default {
     deleteDomain() {
       this.deleteOne({
         id: this.domain.id
-      }).then(() => {
+      })
+        .then(() => {
           this.addNotification({
             type: "success",
             text: "Domain deleted"
-          })
+          });
           this.reload();
-        }).catch(err => {
-          console.log("err creating:", err);
+        })
+        .catch(() => {
           this.addNotification({
             type: "failure",
             text: "Domain could not be deleted"
-          })
-          });;
+          });
+        });
     },
     load(id) {
-      this.fetchOne({ id }).then(response => {
-        this.domain = {
-          paths: [],
-          code: "301",
-          ...response.data
-        };
-      }).catch(err => {
-          console.log("err creating:", err);
+      this.fetchOne({ id })
+        .then(response => {
+          this.domain = {
+            paths: [],
+            code: "301",
+            ...response.data
+          };
+        })
+        .catch(() => {
           this.addNotification({
             type: "failure",
             text: "Domain could not be loaded"
-          })
-          });;
+          });
+        });
     },
     loadNew() {
       this.domain = {

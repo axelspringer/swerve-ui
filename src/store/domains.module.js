@@ -1,5 +1,4 @@
 import { read, create, update, remove } from "api-client";
-import Vue from "vue";
 
 /**
  * @typedef {Object} Domain
@@ -32,7 +31,7 @@ const endpoint =
     : "https://api.swerve.tortuga.cloud/domains";
 
 const actions = {
-  async fetchOne({ commit }, { id }) {
+  async fetchOne(/*{ commit },*/ { id }) {
     let response = await read(`${endpoint}/${id}`);
 
     if (!response) {
@@ -48,17 +47,17 @@ const actions = {
 
     return response;
   },
-  async updateOne({ commit }, data) {
+  async updateOne(data) {
     const response = await update(`${endpoint}/${data.id}`, data);
 
     return response;
   },
-  async createOne({ commit }, data) {
+  async createOne(data) {
     const response = await create(endpoint, data);
 
     return response;
   },
-  async deleteOne({ commit }, data) {
+  async deleteOne(data) {
     const response = await remove(`${endpoint}/${data.id}`);
 
     return response;

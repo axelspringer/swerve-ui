@@ -17,7 +17,7 @@ const request = (resource, options = {}) => {
   })
     .then(handleError)
     .then(toText)
-    .then(toJSON)
+    .then(toJSON);
 };
 
 /**
