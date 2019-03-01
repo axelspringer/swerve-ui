@@ -190,7 +190,7 @@ export default {
         });
     },
     load(id) {
-      this.fetchOne({ id })
+      this.fetchOne(id)
         .then(response => {
           this.domain = {
             paths: [],

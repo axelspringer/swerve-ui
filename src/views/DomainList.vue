@@ -31,7 +31,7 @@ export default {
   computed: {
     ...mapState("domains", ["domains"]),
     orderedDomains: function() {
-      let sortDomains = this.domains;
+      let sortDomains = JSON.parse(JSON.stringify(this.domains));
       return sortDomains.sort(function(a, b) {
         if (a.domain < b.domain) return -1;
         if (a.domain > b.domain) return 1;
