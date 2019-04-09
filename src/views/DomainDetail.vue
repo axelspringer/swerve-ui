@@ -127,7 +127,7 @@ export default {
     },
     reload() {
       console.log("reload")
-      this.fetchList().catch(() => {
+      this.fetchList("reload").catch(() => {
         this.addNotification({
           type: "failure",
           text: "Domains could not be loaded"

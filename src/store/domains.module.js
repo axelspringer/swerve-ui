@@ -41,8 +41,9 @@ const actions = {
     return response;
   },
   async fetchList({ commit }, cursor) {
-    const response = await read(endpoint + (cursor ? ("?cursor=" + cursor) : ""));
+    const response = await read(endpoint + (cursor && cursor != "reload" ? ("?cursor=" + cursor) : ""));
 
+    if (cursor == "reload") response.data.cursor = undefined;
     commit("setDomains", response.data || []);
 
     return response;

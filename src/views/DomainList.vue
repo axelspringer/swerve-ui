@@ -7,7 +7,7 @@
           v-for="domain of this.domains.domains"
           :key="domain.id"
           tag="li"
-          :to="{name: 'domain', params: {domain: domain.id}}"
+          :to="{name: 'domain', params: {domain: domain.domain}}"
           class="router-link"
         >
           <a class="text-white no-underline">{{domain.domain}}</a>
