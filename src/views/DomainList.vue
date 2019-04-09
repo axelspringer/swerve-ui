@@ -1,10 +1,10 @@
 <template>
   <div class="px-2">
     <h2 class="text-blue text-lg font-bold mb-1">Domains</h2>
-    <div class="overflow-auto h-24 md:h-64">
+    <div @scroll="onScroll" class="overflow-auto h-24 md:h-64">
       <ul class="list-reset">
         <router-link
-          v-for="domain of orderedDomains"
+          v-for="domain of this.domains.domains"
           :key="domain.id"
           tag="li"
           :to="{name: 'domain', params: {domain: domain.id}}"
@@ -30,26 +30,40 @@ export default {
   name: "domain-list",
   computed: {
     ...mapState("domains", ["domains"]),
-    orderedDomains: function() {
-      let sortDomains = this.domains;
-      return [...sortDomains].sort(function(a, b) {
-        if (a.domain < b.domain) return -1;
-        if (a.domain > b.domain) return 1;
-        return 0;
-      });
-    }
+    // orderedDomains: function() {
+    //   let sortDomains = this.domains;
+    //   if (sortDomains.domains)
+    //   return [...sortDomains.domains].sort(function(a, b) {
+    //     if (a.domain < b.domain) return -1;
+    //     if (a.domain > b.domain) return 1;
+    //     return 0;
+    //   });
+    // }
   },
   methods: {
     ...mapActions("domains", ["fetchList"]),
-    ...mapMutations(["addNotification"])
+    ...mapMutations(["addNotification"]),
+    onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
+      if (scrollTop + clientHeight >= scrollHeight) {
+        if (this.domains.cursor != "EOF") {
+        this.fetchList(this.domains.cursor).catch(() => {
+          this.addNotification({
+            type: "failure",
+            text: "Domains could not be loaded"
+          });
+        });
+        }
+      }
+    }
   },
-  created() {
+  created() {   
+    console.log("created")
     this.fetchList().catch(() => {
       this.addNotification({
         type: "failure",
         text: "Domains could not be loaded"
       });
     });
-  }
+  },
 };
 </script>

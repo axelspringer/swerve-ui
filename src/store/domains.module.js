@@ -40,8 +40,8 @@ const actions = {
 
     return response;
   },
-  async fetchList({ commit }) {
-    const response = await read(endpoint);
+  async fetchList({ commit }, cursor) {
+    const response = await read(endpoint + (cursor ? ("?cursor=" + cursor) : ""));
 
     commit("setDomains", response.data || []);
 
@@ -70,6 +70,10 @@ const mutations = {
    * @param {Domain[]} domains
    */
   setDomains(state, domains) {
+    if (state.domains && state.domains.domains && state.domains.cursor) {
+      state.domains.domains = [...state.domains.domains, ...domains.domains]
+      state.domains.cursor = domains.cursor
+    } else
     state.domains = domains;
   },
   /**

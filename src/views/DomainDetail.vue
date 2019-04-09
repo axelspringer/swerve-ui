@@ -126,6 +126,7 @@ export default {
       this.domain = {};
     },
     reload() {
+      console.log("reload")
       this.fetchList().catch(() => {
         this.addNotification({
           type: "failure",
