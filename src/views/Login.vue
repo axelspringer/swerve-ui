@@ -3,6 +3,21 @@
     <transition appear name="slide-fade">
       <form method="POST" action @submit.prevent="onSubmit" class="w-full max-w-screen-sm">
         <label
+          for="endpoint-input"
+          class="block text-blue-lightest text-base font-bold mb-1 cursor-pointer ml-1"
+        >Endpoint</label>
+        <input
+          type="text"
+          name="endpoint"
+          id="endpoint-input"
+          v-model="endpoint"
+          required
+          placeholder="api.swerve.tortuga.service"
+          autofocus
+          autocomplete="off"
+          class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 mb-3 rounded focus:border-blue-light focus:outline-none appearance-none"
+        >
+        <label
           for="username-input"
           class="block text-blue-lightest text-base font-bold mb-1 cursor-pointer ml-1"
         >Username</label>
@@ -49,18 +64,20 @@ export default {
     return {
       username: null,
       password: null,
+      endpoint: null,
       disabled: false
     };
   },
   methods: {
-    ...mapActions("auth", ["fetchToken"]),
+    ...mapActions("auth", ["fetchLoginData"]),
     ...mapMutations(["addNotification"]),
     onSubmit() {
       this.disabled = true;
 
-      this.fetchToken({
+      this.fetchLoginData({
         username: this.username,
-        password: this.password
+        password: this.password,
+        endpoint: this.endpoint,
       })
         .then(() => {
           this.$router.push(

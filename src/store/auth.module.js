@@ -1,9 +1,10 @@
 import {create} from "api-client";
-import {getToken, setToken, clearToken} from "../services/token";
+import {getToken, getEndpoint, setLoginData, clearLoginData} from "../services/token";
 
 
 const state = {
-  token: getToken()
+  token: getToken(),
+  endpoint: getEndpoint(),
 };
 
 const getters = {
@@ -11,7 +12,7 @@ const getters = {
 };
 
 const actions = {
-  async fetchToken({commit}, {username, password}) {
+  async fetchLoginData({commit}, {username, password, endpoint}) {
     try {
       /*
       const response = await create("https://some.api.endpoint", {
@@ -28,7 +29,10 @@ const actions = {
   
       const token = response.data.access_token;
   
-      commit('storeToken', token);
+      commit('storeLoginData', {
+        token,
+        endpoint,
+      });
 
       return response;
     } catch (error) {
@@ -38,13 +42,15 @@ const actions = {
 };
 
 const mutations = {
-  storeToken(state, token) {
-    state.token = token;
-    setToken(token);
+  storeLoginData(state, data) {
+    state.token = data.token;
+    state.endpoint = data.endpoint
+    setLoginData(data);
   },
-  clearToken(state) {
+  clearLoginData(state) {
     state.token = null;
-    clearToken();
+    state.endpoint = null;
+    clearLoginData();
   }
 };
 

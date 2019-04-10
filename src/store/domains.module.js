@@ -31,7 +31,7 @@ const endpoint =
     : "https://api.swerve.tortuga.cloud/domains";
 
 const actions = {
-  async fetchOne({ commit }, id) {
+  async fetchOne({ commit }, {endpoint, id}) {
     let response = await read(`${endpoint}/${id}`);
 
     if (!response) {
@@ -40,7 +40,7 @@ const actions = {
 
     return response;
   },
-  async fetchList({ commit }, cursor) {
+  async fetchList({ commit }, {endpoint, cursor}) {
     const response = await read(endpoint + (cursor && cursor != "reload" ? ("?cursor=" + cursor) : ""));
 
     if (cursor == "reload") {
@@ -50,18 +50,18 @@ const actions = {
 
     return response;
   },
-  async updateOne({ commit }, data) {
-    const response = await update(`${endpoint}/${data.id}`, data);
+  async updateOne({ commit }, {endpoint, domain}) {
+    const response = await update(`${endpoint}/${domain.domain}`, data);
 
     return response;
   },
-  async createOne({ commit }, data) {
-    const response = await create(endpoint, data);
+  async createOne({ commit }, {endpoint, domain}) {
+    const response = await create(endpoint, domain);
 
     return response;
   },
-  async deleteOne({ commit }, data) {
-    const response = await remove(`${endpoint}/${data.id}`);
+  async deleteOne({ commit }, {endpoint, domain}) {
+    const response = await remove(`${endpoint}/${domain.domain}`);
 
     return response;
   }

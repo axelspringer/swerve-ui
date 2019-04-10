@@ -43,6 +43,7 @@ export default {
   },
   computed: {
     ...mapState("domains", ["domains"]),
+    ...mapState("auth", ['endpoint']),
     orderedDomains: function() {
       let sortDomains = Object.assign({}, this.domains);
       if (sortDomains.domains) {
@@ -64,7 +65,10 @@ export default {
     onScroll ({ target: { scrollTop, clientHeight, scrollHeight }}) {
       if (scrollTop + clientHeight >= scrollHeight) {
         if (this.domains.cursor != "EOF") {
-        this.fetchList(this.domains.cursor).catch(() => {
+        this.fetchList({
+        endpoint: this.endpoint,
+        cursor: this.domain.cursor
+        }).catch(() => {
           this.addNotification({
             type: "failure",
             text: "Domains could not be loaded"
@@ -75,8 +79,9 @@ export default {
     }
   },
   created() {   
-    console.log("created")
-    this.fetchList().catch(() => {
+    this.fetchList({
+        endpoint: this.endpoint,
+        }).catch(() => {
       this.addNotification({
         type: "failure",
         text: "Domains could not be loaded"

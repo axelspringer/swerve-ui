@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import DomainPaths from "../components/DomainPaths";
 
 export default {
@@ -112,6 +112,9 @@ export default {
       isNew: false,
       domain: {}
     };
+  },
+  computed: {
+    ...mapState("auth", ['endpoint']),
   },
   methods: {
     ...mapActions("domains", [
@@ -126,8 +129,10 @@ export default {
       this.domain = {};
     },
     reload() {
-      console.log("reload")
-      this.fetchList("reload").catch(() => {
+      this.fetchList({
+        endpoint: this.endpoint,
+        cursor: "reload"
+        }).catch(() => {
         this.addNotification({
           type: "failure",
           text: "Domains could not be loaded"
@@ -137,7 +142,10 @@ export default {
     },
     save() {
       if (this.isNew) {
-        this.createOne(this.domain)
+        this.createOne({
+        endpoint: this.endpoint,
+        domain: this.domain
+        })
           .then(() => {
             this.addNotification({
               type: "success",
@@ -153,7 +161,10 @@ export default {
           });
         return;
       } else
-        this.updateOne(this.domain)
+        this.updateOne({
+          endpoint: this.endpoint,
+          domain: this.domain,
+        })
           .then(() => {
             this.addNotification({
               type: "success",
@@ -174,8 +185,9 @@ export default {
     },
     deleteDomain() {
       this.deleteOne({
-        id: this.domain.id
-      })
+        endpoint: this.endpoint,
+        domain: this.domain
+        })
         .then(() => {
           this.addNotification({
             type: "success",
@@ -191,7 +203,10 @@ export default {
         });
     },
     load(id) {
-      this.fetchOne(id)
+      this.fetchOne({
+        endpoint: this.endpoint,
+        id
+        })
         .then(response => {
           this.domain = {
             paths: [],
