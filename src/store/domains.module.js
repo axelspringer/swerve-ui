@@ -43,7 +43,9 @@ const actions = {
   async fetchList({ commit }, cursor) {
     const response = await read(endpoint + (cursor && cursor != "reload" ? ("?cursor=" + cursor) : ""));
 
-    if (cursor == "reload") response.data.cursor = undefined;
+    if (cursor == "reload") {
+      response.data.reload = true;
+    }
     commit("setDomains", response.data || []);
 
     return response;
@@ -71,7 +73,7 @@ const mutations = {
    * @param {Domain[]} domains
    */
   setDomains(state, domains) {
-    if (state.domains && state.domains.domains && state.domains.cursor) {
+    if (state.domains && state.domains.domains && !domains.reload) {
       state.domains.domains = [...state.domains.domains, ...domains.domains]
       state.domains.cursor = domains.cursor
     } else
