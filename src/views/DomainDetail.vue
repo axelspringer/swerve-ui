@@ -206,7 +206,7 @@ export default {
       this.fetchOne({
         endpoint: this.endpoint,
         id
-        })
+      })
         .then(response => {
           this.domain = {
             paths: [],

@@ -51,7 +51,7 @@ const actions = {
     return response;
   },
   async updateOne({ commit }, {endpoint, domain}) {
-    const response = await update(`${endpoint}/${domain.domain}`, data);
+    const response = await update(`${endpoint}/${domain.domain}`, domain);
 
     return response;
   },

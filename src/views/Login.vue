@@ -12,7 +12,7 @@
           id="endpoint-input"
           v-model="endpoint"
           required
-          placeholder="api.swerve.tortuga.service"
+          placeholder="api.swerve.tortuga.service:8080"
           autofocus
           autocomplete="off"
           class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 mb-3 rounded focus:border-blue-light focus:outline-none appearance-none"
@@ -62,9 +62,9 @@ import { mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      username: null,
-      password: null,
-      endpoint: null,
+      username: "",
+      password: "",
+      endpoint: "",
       disabled: false
     };
   },
@@ -72,12 +72,19 @@ export default {
     ...mapActions("auth", ["fetchLoginData"]),
     ...mapMutations(["addNotification"]),
     onSubmit() {
+      console.log(this.endpoint);
+      if (!this.endpoint || this.endpoint.includes("/")) {
+        this.addNotification({
+            type: "failure",
+            text: "Please enter a valid endpoint"
+          });
+      }
       this.disabled = true;
 
       this.fetchLoginData({
         username: this.username,
         password: this.password,
-        endpoint: this.endpoint,
+        endpoint: "http://" + this.endpoint + "/api/domain",
       })
         .then(() => {
           this.$router.push(

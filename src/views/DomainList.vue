@@ -13,7 +13,7 @@
       <ul class="list-reset">
         <router-link
           v-for="domain of orderedDomains"
-          :key="domain.id"
+          :key="domain.domain"
           tag="li"
           :to="{name: 'domain', params: {domain: domain.domain}}"
           class="router-link"
