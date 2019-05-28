@@ -72,7 +72,6 @@ export default {
     ...mapActions("auth", ["fetchLoginData"]),
     ...mapMutations(["addNotification"]),
     onSubmit() {
-      console.log(this.endpoint);
       if (!this.endpoint || this.endpoint.includes("/")) {
         this.addNotification({
             type: "failure",
