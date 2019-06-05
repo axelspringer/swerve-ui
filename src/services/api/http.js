@@ -40,7 +40,7 @@ const read = resource => {
 const create = (resource, data) => {
   return request(resource, {
     method: 'POST',
-    data: JSON.stringify(data)
+    body: JSON.stringify(data)
   });
 };
 
@@ -65,7 +65,7 @@ const remove = resource => {
 const update = (resource, data) => {
   return request(resource, {
     method: "PUT",
-    data: JSON.stringify(data)
+    body: JSON.stringify(data)
   });
 };
 
