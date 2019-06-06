@@ -227,6 +227,7 @@ export default {
       };
     },
     addPath(path) {
+      if (!this.domain.paths) this.domain.paths = [];
       this.domain.paths.push(path);
     },
     updatePath(payload) {
