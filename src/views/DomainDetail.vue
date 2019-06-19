@@ -64,6 +64,7 @@
         <domain-paths
           :paths="domain.paths"
           :target="domain.redirect"
+          :domain="domain.domain"
           @add="addPath"
           @update="updatePath"
           @remove="removePath"

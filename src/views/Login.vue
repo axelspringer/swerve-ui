@@ -83,14 +83,14 @@ export default {
       this.fetchLoginData({
         username: this.username,
         password: this.password,
-        endpoint: "http://" + this.endpoint + "/api/domain",
+        endpoint: "http://" + this.endpoint,
       })
         .then(() => {
           this.$router.push(
             this.$router.history.current.query.redirectTo || "/"
           );
         })
-        .catch(() => {
+        .catch((err) => {
           this.addNotification({
             type: "failure",
             text: "Login failed"

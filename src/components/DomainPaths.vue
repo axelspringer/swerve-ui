@@ -12,7 +12,7 @@
               <div class="inline-block w-12">From</div>
               <div class="text-white">
                 <div>{{path.from}}</div>
-                <div class="text-xs text-nepal">{{target}}{{path.from}}</div>
+                <div class="text-xs text-nepal">{{domain}}{{path.from}}</div>
               </div>
             </div>
             <div class="text-blue-lightest text-base font-bold mr-1 flex">
@@ -94,6 +94,10 @@ export default {
       }
     },
     target: {
+      type: String,
+      default: ""
+    },
+    domain: {
       type: String,
       default: ""
     }

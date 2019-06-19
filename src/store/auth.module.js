@@ -13,32 +13,17 @@ const getters = {
 
 const actions = {
   async fetchLoginData({commit}, {username, password, endpoint}) {
-    try {
-      /*
-      const response = await create("https://some.api.endpoint", {
+      const response = await create(endpoint + "/login", {
         username,
         password
-      });
-      */
-
-      if (username !== 'admin' && password !== 'admin') {
-        return Promise.reject();
-      }
-
-      const response = await Promise.resolve({data: {access_token: 'access_token'}});
-  
-      const token = response.data.access_token;
+      })
   
       commit('storeLoginData', {
-        token,
-        endpoint,
+        endpoint: endpoint + "/api/domain",
       });
 
       return response;
-    } catch (error) {
-      return error;
-    }
-  }
+    } 
 };
 
 const mutations = {
