@@ -54,6 +54,7 @@ export default {
           return 0;
         });
       }
+      return 0;
     }
   },
   methods: {
@@ -81,15 +82,16 @@ export default {
   created() {   
     this.fetchList({
         endpoint: this.endpoint,
+        cursor: "reload",
         }).catch((err) => {
           if (err.toString() == "Error: Unauthorized") {
             this.$router.push({name: "login"});
             return
           }
-      this.addNotification({
-        type: "failure",
-        text: "Domains could not be loaded"
-      });
+          this.addNotification({
+            type: "failure",
+            text: "Domains could not be loaded"
+          });
     });
   },
 };

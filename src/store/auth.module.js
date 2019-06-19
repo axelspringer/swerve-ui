@@ -1,5 +1,6 @@
 import {create} from "api-client";
 import {getToken, getEndpoint, setLoginData, clearLoginData} from "../services/token";
+import { read } from "fs";
 
 
 const state = {
@@ -19,11 +20,11 @@ const actions = {
       })
   
       commit('storeLoginData', {
-        endpoint: endpoint + "/api/domain",
+        endpoint,
       });
 
       return response;
-    } 
+    }
 };
 
 const mutations = {

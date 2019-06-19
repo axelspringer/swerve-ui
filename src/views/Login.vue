@@ -58,13 +58,16 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
+import { getEndpoint } from "../services/token";
 
 export default {
   data() {
+    let endpoint = getEndpoint();
+    if (!endpoint) endpoint = "";
     return {
       username: "",
       password: "",
-      endpoint: "",
+      endpoint: endpoint,
       disabled: false
     };
   },
@@ -72,7 +75,8 @@ export default {
     ...mapActions("auth", ["fetchLoginData"]),
     ...mapMutations(["addNotification"]),
     onSubmit() {
-      if (!this.endpoint || this.endpoint.includes("/")) {
+      let url = new URL(this.endpoint)
+      if (!url.origin) {
         this.addNotification({
             type: "failure",
             text: "Please enter a valid endpoint"
@@ -83,7 +87,7 @@ export default {
       this.fetchLoginData({
         username: this.username,
         password: this.password,
-        endpoint: "http://" + this.endpoint,
+        endpoint: url.origin,
       })
         .then(() => {
           this.$router.push(

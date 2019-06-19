@@ -12,6 +12,7 @@
             v-model="domain.domain"
             required
             class="form-input"
+            :disabled="!isNew"
           >
         </div>
         <div class="mb-1">
@@ -116,6 +117,7 @@ export default {
   },
   computed: {
     ...mapState("auth", ['endpoint']),
+    ...mapState("domains", ["domains"]),
   },
   methods: {
     ...mapActions("domains", [
@@ -154,7 +156,14 @@ export default {
             });
             this.reload();
           })
-          .catch(() => {
+          .catch((err) => {
+            if (err.toString() == "Error: Unauthorized") {
+              this.addNotification({
+              type: "failure",
+              text: "Please relogin"
+            });
+              return
+            }
             this.addNotification({
               type: "failure",
               text: "Domain could not be created"
@@ -173,7 +182,14 @@ export default {
             });
             this.reload();
           })
-          .catch(() => {
+          .catch((err) => {
+            if (err.toString() == "Error: Unauthorized") {
+              this.addNotification({
+              type: "failure",
+              text: "Please relogin"
+            });
+              return
+            }
             this.addNotification({
               type: "failure",
               text: "Domain could not be updated"
@@ -196,7 +212,14 @@ export default {
           });
           this.reload();
         })
-        .catch(() => {
+        .catch((err) => {
+          if (err.toString() == "Error: Unauthorized") {
+              this.addNotification({
+              type: "failure",
+              text: "Please relogin"
+            });
+              return
+            }
           this.addNotification({
             type: "failure",
             text: "Domain could not be deleted"
@@ -215,7 +238,11 @@ export default {
             ...response.data
           };
         })
-        .catch(() => {
+        .catch((err) => {
+          if (err.toString() == "Error: Unauthorized") {
+            this.$router.push({name: "login"});
+            return
+          }
           this.addNotification({
             type: "failure",
             text: "Domain could not be loaded"

@@ -25,7 +25,6 @@ const getEndpoint = () => {
 
 const clearLoginData = () => {
   removeItem(TOKEN_STORAGE_KEY);
-  removeItem(ENDPOINT_STORAGE_KEY);
 };
 
 /**
