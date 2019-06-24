@@ -1,10 +1,28 @@
 <template>
   <div>
     <div v-if="!showForm">
+      <button
+              @click.prevent="prevPage"
+              class="button button-secondary button-small mr-4"
+              :disabled="pageNumber==1"
+              :hidden="!paths"
+            >previous</button>
+      <button
+              @click.prevent="nextPage"
+              class="button button-primary button-small"
+              :disabled="pageNumber >= pageCount"
+              :hidden="!paths"
+            >next</button>
+      <br/>
+      <br/>
+      <div class="text-white"
+      :hidden="!paths"
+      >{{pageNumber + "/" + pageCount}}</div>
+      <br/>
       <ul class="list-reset">
         <li
           class="flex mb-1 pb-1 border-b border-blue-dark2"
-          v-for="path of paths"
+          v-for="path of paginatedData"
           :key="path.from + path.to"
         >
           <div class="flex-1">
@@ -100,6 +118,10 @@ export default {
     domain: {
       type: String,
       default: ""
+    },
+    size: {
+      type: Number,
+      default: 10
     }
   },
   data() {
@@ -108,14 +130,26 @@ export default {
       from: "",
       to: "",
       isNew: false,
-      pathToEdit: null
+      pathToEdit: null,
+      pageNumber: 1
     };
   },
   computed: {
     saveLabel() {
       return this.isNew ? "Add Path" : "Update Path";
+    },
+    pageCount() {
+      if (!this.paths) return
+      let l = this.paths.length, s = this.size;
+      return Math.ceil(l/s);
+    },
+    paginatedData() {
+       if (!this.paths) return []
+      const start = (this.pageNumber-1) * this.size,
+        end = start + this.size;
+      return this.paths.slice(start, end);
     }
-  },
+  }, 
   methods: {
     add() {
       this.showForm = false;
@@ -159,6 +193,12 @@ export default {
     },
     remove(path) {
       this.$emit("remove", path);
+    },
+    nextPage() {
+      this.pageNumber++;
+    },
+    prevPage() {
+      this.pageNumber--;
     }
   }
 };
