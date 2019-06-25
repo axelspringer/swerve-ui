@@ -1,24 +1,31 @@
 <template>
   <div>
     <div v-if="!showForm">
+      <div v-if="this.paths && this.paths.length > 0">
+      <input
+        name="search-field"
+        id="search-field"
+        placeholder="Search..."
+        v-on:keyup.enter="setFilter"
+        class="form-input mb-4"
+        :hidden="!paths"
+      >
       <button
-              @click.prevent="prevPage"
-              class="button button-secondary button-small mr-4"
-              :disabled="pageNumber==1"
-              :hidden="!paths"
-            >previous</button>
+        @click.prevent="prevPage"
+        class="button button-secondary button-small mr-4"
+        :disabled="pageNumber==1"
+        :hidden="!paths"
+      >previous</button>
       <button
-              @click.prevent="nextPage"
-              class="button button-primary button-small"
-              :disabled="pageNumber >= pageCount"
-              :hidden="!paths"
-            >next</button>
-      <br/>
-      <br/>
-      <div class="text-white"
-      :hidden="!paths"
-      >{{pageNumber + "/" + pageCount}}</div>
-      <br/>
+        @click.prevent="nextPage"
+        class="button button-primary button-small"
+        :disabled="pageNumber >= pageCount"
+        :hidden="!paths"
+      >next</button>
+      <br>
+      <br>
+      <div class="text-white" :hidden="!paths">{{pageNumber + "/" + pageCount}}</div>
+      <br>
       <ul class="list-reset">
         <li
           class="flex mb-1 pb-1 border-b border-blue-dark2"
@@ -55,6 +62,7 @@
           </div>
         </li>
       </ul>
+      </div>
       <button
         @click.prevent="create"
         class="button button-primary button-small"
@@ -131,7 +139,9 @@ export default {
       to: "",
       isNew: false,
       pathToEdit: null,
-      pageNumber: 1
+      pageNumber: 1,
+      currentPaths: this.paths,
+      filter: ""
     };
   },
   computed: {
@@ -139,18 +149,38 @@ export default {
       return this.isNew ? "Add Path" : "Update Path";
     },
     pageCount() {
-      if (!this.paths) return
-      let l = this.paths.length, s = this.size;
+      if (!this.currentPaths) return;
+      let l = this.currentPaths.length, s = this.size;
       return Math.ceil(l/s);
     },
     paginatedData() {
-       if (!this.paths) return []
-      const start = (this.pageNumber-1) * this.size,
+      this.doFilter();
+      if (!this.currentPaths) return [];
+      let cpPaths = this.currentPaths.slice(0);
+      const start = (this.pageNumber - 1) * this.size,
         end = start + this.size;
-      return this.paths.slice(start, end);
+      return cpPaths.slice(start, end);
     }
   }, 
   methods: {
+    setFilter(ev) {
+      this.filter = ev.target.value;
+    },
+    doFilter() {
+      let filter = this.filter;
+      if (filter != "" && this.paths) {
+        let cpPaths = this.paths.slice(0);
+        cpPaths = cpPaths.filter(path => path.from.startsWith(filter));
+        this.currentPaths = [...cpPaths].sort(function(a, b) {
+          if (a.from < b.from) return -1;
+          if (a.from > b.from) return 1;
+          return 0;
+        });
+        this.pageNumber = 1;
+        return;
+      } 
+      this.currentPaths = this.paths;
+    },
     add() {
       this.showForm = false;
 
@@ -159,6 +189,7 @@ export default {
           from: this.from,
           to: this.to
         });
+
 
         return;
       }
