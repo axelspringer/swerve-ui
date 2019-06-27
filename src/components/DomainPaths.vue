@@ -165,6 +165,7 @@ export default {
   methods: {
     setFilter(ev) {
       this.filter = ev.target.value;
+      this.pageNumber = 1;
     },
     doFilter() {
       let filter = this.filter;
@@ -176,7 +177,6 @@ export default {
           if (a.from > b.from) return 1;
           return 0;
         });
-        this.pageNumber = 1;
         return;
       } 
       this.currentPaths = this.paths;
