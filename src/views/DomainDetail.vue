@@ -49,7 +49,6 @@
             class="bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"
           >
             <option :value="undefined">Please choose ...</option>
-            <option value="300">300 - Multiple Choices</option>
             <option value="301">301 - Moved Permanently</option>
             <option value="302">302 - Found</option>
             <option value="303">303 - See Other</option>
