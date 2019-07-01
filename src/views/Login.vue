@@ -75,7 +75,15 @@ export default {
     ...mapActions("auth", ["fetchLoginData"]),
     ...mapMutations(["addNotification"]),
     onSubmit() {
-      let url = new URL(this.endpoint)
+      try {
+        let url = new URL(this.endpoint)
+      } catch(e) {
+        this.addNotification({
+            type: "failure",
+            text: "Please enter a valid endpoint"
+          });
+          return
+      }
       if (!url.origin) {
         this.addNotification({
             type: "failure",
