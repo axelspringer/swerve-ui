@@ -75,8 +75,9 @@ export default {
     ...mapActions("auth", ["fetchLoginData"]),
     ...mapMutations(["addNotification"]),
     onSubmit() {
+      let url;
       try {
-        let url = new URL(this.endpoint)
+        url = new URL(this.endpoint)
       } catch(e) {
         this.addNotification({
             type: "failure",
