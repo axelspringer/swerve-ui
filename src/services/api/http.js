@@ -26,7 +26,8 @@ const request = (resource, options = {}) => {
  */
 const read = resource => {
   return request(resource, {
-    method: 'GET'
+    method: 'GET',
+    credentials: "include",
   });
 };
 
@@ -40,6 +41,7 @@ const read = resource => {
 const create = (resource, data) => {
   return request(resource, {
     method: 'POST',
+    credentials: "include",
     body: JSON.stringify(data)
   });
 };
@@ -52,7 +54,8 @@ const create = (resource, data) => {
  */
 const remove = resource => {
   return request(resource, {
-    method: "DELETE"
+    method: "DELETE",
+    credentials: "include",
   });
 };
 
@@ -65,6 +68,7 @@ const remove = resource => {
 const update = (resource, data) => {
   return request(resource, {
     method: "PUT",
+    credentials: "include",
     body: JSON.stringify(data)
   });
 };
