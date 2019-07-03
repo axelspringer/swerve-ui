@@ -98,7 +98,10 @@ export default {
         password: this.password,
         endpoint: url.origin,
       })
-        .then(() => {
+        .then((res) => {
+          if (response.status == 401) {
+            throw new Error("Error: Unauthorized");
+          }
           this.$router.push(
             this.$router.history.current.query.redirectTo || "/"
           );
