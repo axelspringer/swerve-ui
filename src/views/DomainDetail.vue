@@ -1,6 +1,7 @@
 <template>
   <div>
-    <form @submit.prevent="save" @reset.prevent="cancel" class="w-full">
+    <div v-if="isLoadingDomain" class="text-white no-underline">Loading...</div>
+    <form v-if="!isLoadingDomain" @submit.prevent="save" @reset.prevent="cancel" class="w-full">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Basic Data</legend>
         <div class="mb-4">
@@ -117,6 +118,7 @@ export default {
   computed: {
     ...mapState("auth", ['endpoint']),
     ...mapState("domains", ["domains"]),
+    ...mapState(['isLoadingDomain']),
   },
   methods: {
     ...mapActions("domains", [
@@ -126,7 +128,7 @@ export default {
       "deleteOne",
       "fetchList"
     ]),
-    ...mapMutations(["addNotification"]),
+    ...mapMutations(["addNotification", "updateDomainLoadingStatus"]),
     reset() {
       this.domain = {};
     },
@@ -226,11 +228,13 @@ export default {
         });
     },
     load(id) {
+      this.updateDomainLoadingStatus(true)
       this.fetchOne({
         endpoint: this.endpoint,
         id
       })
         .then(response => {
+          this.updateDomainLoadingStatus(false)
           this.domain = {
             paths: [],
             code: "301",
@@ -238,6 +242,7 @@ export default {
           };
         })
         .catch((err) => {
+          this.updateDomainLoadingStatus(false)
           if (err.toString() == "Error: Unauthorized") {
             this.$router.push({name: "login"});
             return

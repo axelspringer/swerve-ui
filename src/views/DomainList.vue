@@ -10,6 +10,7 @@
             class="form-input mb-4"
           >
     <div @scroll="onScroll" class="overflow-auto h-24 md:h-64">
+      <div v-if="isLoadingDomains" class="text-white no-underline">Loading...</div>
       <ul class="list-reset">
         <router-link
           v-for="domain of orderedDomains"
@@ -44,6 +45,7 @@ export default {
   computed: {
     ...mapState("domains", ["domains"]),
     ...mapState("auth", ['endpoint']),
+    ...mapState(['isLoadingDomains']),
     orderedDomains: function() {
       let sortDomains = Object.assign({}, this.domains);
       if (sortDomains.domains) {
@@ -59,7 +61,7 @@ export default {
   },
   methods: {
     ...mapActions("domains", ["fetchList"]),
-    ...mapMutations(["addNotification"]),
+    ...mapMutations(["addNotification", "updateDomainsLoadingStatus"]),
     onFilter(ev) {
       this.filter = ev.target.value;
     },
@@ -79,11 +81,16 @@ export default {
       }
     }
   },
-  created() {   
+  created() {
+    this.updateDomainsLoadingStatus(true)   
     this.fetchList({
         endpoint: this.endpoint,
         cursor: "reload",
+        })
+        .then(() => {
+          this.updateDomainsLoadingStatus(false)  
         }).catch((err) => {
+          this.updateDomainsLoadingStatus(false)  
           if (err.toString() == "Error: Unauthorized") {
             this.$router.push({name: "login"});
             return

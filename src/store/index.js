@@ -12,6 +12,12 @@ const mutations = {
   },
   removeNotification(state, notification) {
     state.notifications = state.notifications.filter(n => n !== notification);
+  },
+  updateDomainsLoadingStatus(state, status) {
+    state.isLoadingDomains = status
+  },
+  updateDomainLoadingStatus(state, status) {
+    state.isLoadingDomain = status
   }
 };
 
@@ -23,6 +29,8 @@ export default new Vuex.Store({
   },
   state: {
     isLoading: false,
+    isLoadingDomains: false,
+    isLoadingDomain: false,
     notifications: []
   },
   mutations,
