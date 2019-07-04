@@ -6,18 +6,19 @@ const handleError = response => {
   return response;
 };
 
-const toJSON = response => response.json();
+const toJSON = text => (text.length ? JSON.parse(text) : {});
+
+const toText = response => response.text();
 
 const request = (resource, options = {}) => {
   return fetch(resource, {
     method: "GET",
     ...options
   })
-  .then(handleError)
-  .then(toJSON)
-  .catch(error => error)
+    .then(handleError)
+    .then(toText)
+    .then(toJSON);
 };
-
 /**
  * 
  * @param {string} resource 
