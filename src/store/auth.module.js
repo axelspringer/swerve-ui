@@ -1,9 +1,11 @@
 import {create} from "api-client";
-import {getToken, setToken, clearToken} from "../services/token";
+import {getToken, getEndpoint, setLoginData, clearLoginData} from "../services/token";
+import { read } from "fs";
 
 
 const state = {
-  token: getToken()
+  token: getToken(),
+  endpoint: getEndpoint(),
 };
 
 const getters = {
@@ -11,40 +13,31 @@ const getters = {
 };
 
 const actions = {
-  async fetchToken({commit}, {username, password}) {
-    try {
-      /*
-      const response = await create("https://some.api.endpoint", {
+  async fetchLoginData({commit}, {username, password, endpoint}) {
+      const response = await create(endpoint + "/login", {
         username,
         password
+      })
+  
+      commit('storeLoginData', {
+        endpoint,
       });
-      */
-
-      if (username !== 'admin' && password !== 'admin') {
-        return Promise.reject();
-      }
-
-      const response = await Promise.resolve({data: {access_token: 'access_token'}});
-  
-      const token = response.data.access_token;
-  
-      commit('storeToken', token);
 
       return response;
-    } catch (error) {
-      return error;
     }
-  }
 };
 
 const mutations = {
-  storeToken(state, token) {
-    state.token = token;
-    setToken(token);
+  storeLoginData(state, data) {
+    state.token = data.token;
+    state.endpoint = data.endpoint
+    setLoginData(data);
   },
-  clearToken(state) {
+  clearLoginData(state) {
     state.token = null;
-    clearToken();
+    state.endpoint = null;
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    clearLoginData();
   }
 };
 

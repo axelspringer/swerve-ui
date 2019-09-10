@@ -1,25 +1,55 @@
 <template>
   <div>
-    <form @submit.prevent="save" @reset.prevent="cancel" class="max-w-md">
+    <div v-if="isLoadingDomain" class="text-white no-underline">Loading...</div>
+    <form v-if="!isLoadingDomain" @submit.prevent="save" @reset.prevent="cancel" class="w-full">
       <fieldset class="form-fieldset">
         <legend class="form-legend">Basic Data</legend>
         <div class="mb-4">
           <label for="domain-field" class="form-label mb-1 ml-px">Domain</label>
-            <input type="url" name="domain-field" id="domain-field" placeholder="https://domain.com" v-model="domain.domain" required class="form-input">
+          <input
+            name="domain-field"
+            id="domain-field"
+            placeholder="domain.com"
+            v-model="domain.domain"
+            required
+            class="form-input"
+            :disabled="!isNew"
+          >
         </div>
         <div class="mb-1">
           <label for="redirect-field" class="form-label mb-1 ml-px">Redirect</label>
-          <input type="url" name="redirect-field" id="redirect-field" v-model="domain.redirect" placeholder="https://redirect.com" required class="form-input">
+          <input
+            name="redirect-field"
+            id="redirect-field"
+            v-model="domain.redirect"
+            placeholder="redirect.com"
+            required
+            class="form-input"
+          >
         </div>
         <div class="flex mb-4">
-          <input type="checkbox" name="promotable-field" id="promotable-field" class="mr-2" v-model="domain.promotable">
-          <label for="promotable-field" class="form-label">Include Path and Query-String <span class="text-xs">(optional)</span></label>
+          <input
+            type="checkbox"
+            name="promotable-field"
+            id="promotable-field"
+            class="mr-2 bg-blue-dark"
+            v-model="domain.promotable"
+          >
+          <label for="promotable-field" class="form-label">
+            Include Path and Query-String
+            <span class="text-xs">(optional)</span>
+          </label>
         </div>
         <div>
-          <label for="status-field" class="form-label mb-1 ml-px">HTTP Statuscode</label>
-          <select name="status-field" id="status-field" v-model="domain.status" required class="bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none">
+          <label for="code-field" class="form-label mb-1 ml-px">HTTP Statuscode</label>
+          <select
+            name="code-field"
+            id="code-field"
+            v-model.number="domain.code"
+            required
+            class="bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"
+          >
             <option :value="undefined">Please choose ...</option>
-            <option value="200">300 - Multiple Choices</option>
             <option value="301">301 - Moved Permanently</option>
             <option value="302">302 - Found</option>
             <option value="303">303 - See Other</option>
@@ -32,18 +62,38 @@
       </fieldset>
       <fieldset class="form-fieldset">
         <legend class="form-legend">Paths</legend>
-        <domain-paths :paths="domain.paths" :target="domain.redirect" @add="addPath" @update="updatePath" @remove="removePath"></domain-paths>
+        <domain-paths
+          :paths="domain.paths"
+          :target="domain.redirect"
+          :domain="domain.domain"
+          @add="addPath"
+          @update="updatePath"
+          @remove="removePath"
+        ></domain-paths>
       </fieldset>
       <fieldset class="form-fieldset">
         <legend class="form-legend">Additional Information</legend>
         <div>
-          <label for="description-field" class="form-label mb-1 ml-px">Description <span class="text-xs">(optional)</span></label>
-          <textarea rows="3" id="description-field" name="description-field" v-model="domain.description" class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"></textarea>
+          <label for="description-field" class="form-label mb-1 ml-px">
+            Description
+            <span class="text-xs">(optional)</span>
+          </label>
+          <textarea
+            rows="3"
+            id="description-field"
+            name="description-field"
+            v-model="domain.description"
+            class="w-full bg-blue-dark border border-blue-dark2 text-l text-white p-2 rounded focus:border-blue-light focus:outline-none appearance-none"
+          ></textarea>
         </div>
       </fieldset>
       <div class="flex justify-between">
         <button class="button button-primary" type="submit">Save</button>
-        <button v-if="!isNew" @click.prevent="deleteDomain" class="button bg-crimson hover:bg-cinnabar">Delete Domain</button>
+        <button
+          v-if="!isNew"
+          @click.prevent="deleteDomain"
+          class="button bg-crimson hover:bg-cinnabar"
+        >Delete Domain</button>
         <button class="button button-secondary" type="reset">Cancel</button>
       </div>
     </form>
@@ -51,7 +101,7 @@
 </template>
 
 <script>
-import {mapState, mapActions, mapMutations} from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import DomainPaths from "../components/DomainPaths";
 
 export default {
@@ -63,50 +113,153 @@ export default {
     return {
       isNew: false,
       domain: {}
-    }
+    };
+  },
+  computed: {
+    ...mapState("auth", ['endpoint']),
+    ...mapState("domains", ["domains"]),
+    ...mapState(['isLoadingDomain']),
   },
   methods: {
     ...mapActions("domains", [
       "fetchOne",
       "createOne",
-      "updateOne"
+      "updateOne",
+      "deleteOne",
+      "fetchList"
     ]),
-    ...mapMutations([
-      "addNotification"
-    ]),
+    ...mapMutations(["addNotification", "updateDomainLoadingStatus"]),
     reset() {
       this.domain = {};
     },
-    save() {
-      if (this.isNew) {
-        this.createOne(this.domain);
-        return;
-      }
-
-      this.updateOne(this.domain).then(() => {
+    reload() {
+      this.fetchList({
+        endpoint: this.endpoint,
+        cursor: "reload"
+        }).catch(() => {
         this.addNotification({
-          type: "success",
-          text: "Domain updated"
+          type: "failure",
+          text: "Domains could not be loaded"
         });
       });
+      this.cancel();
+    },
+    save() {
+      if (this.isNew) {
+        this.createOne({
+        endpoint: this.endpoint,
+        domain: this.domain
+        })
+          .then(() => {
+            this.addNotification({
+              type: "success",
+              text: "Domain created"
+            });
+            this.reload();
+          })
+          .catch((err) => {
+            if (err.toString() == "Error: Unauthorized") {
+              this.addNotification({
+              type: "failure",
+              text: "Please relogin"
+            });
+              return
+            }
+            this.addNotification({
+              type: "failure",
+              text: "Domain could not be created"
+            });
+          });
+        return;
+      } else
+        this.updateOne({
+          endpoint: this.endpoint,
+          domain: this.domain,
+        })
+          .then(() => {
+            this.addNotification({
+              type: "success",
+              text: "Domain updated"
+            });
+            this.reload();
+          })
+          .catch((err) => {
+            if (err.toString() == "Error: Unauthorized") {
+              this.addNotification({
+              type: "failure",
+              text: "Please relogin"
+            });
+              return
+            }
+            this.addNotification({
+              type: "failure",
+              text: "Domain could not be updated"
+            });
+          });
     },
     cancel() {
       this.reset();
-      this.$router.push({name: "domains"});
+      this.$router.push({ name: "domains" });
     },
     deleteDomain() {
-
+      this.deleteOne({
+        endpoint: this.endpoint,
+        domain: this.domain
+        })
+        .then(() => {
+          this.addNotification({
+            type: "success",
+            text: "Domain deleted"
+          });
+          this.reload();
+        })
+        .catch((err) => {
+          if (err.toString() == "Error: Unauthorized") {
+              this.addNotification({
+              type: "failure",
+              text: "Please relogin"
+            });
+              return
+            }
+          this.addNotification({
+            type: "failure",
+            text: "Domain could not be deleted"
+          });
+        });
     },
     load(id) {
-      this.fetchOne({id}).then(response => {
-        this.domain = {
-          paths: [],
-          status: "301",
-          ...response.data
-        };
-      });
+      this.updateDomainLoadingStatus(true)
+      this.fetchOne({
+        endpoint: this.endpoint,
+        id
+      })
+        .then(response => {
+          this.updateDomainLoadingStatus(false)
+          this.domain = {
+            paths: [],
+            code: "301",
+            ...response.data
+          };
+        })
+        .catch((err) => {
+          this.updateDomainLoadingStatus(false)
+          if (err.toString() == "Error: Unauthorized") {
+            this.$router.push({name: "login"});
+            return
+          }
+          this.addNotification({
+            type: "failure",
+            text: "Domain could not be loaded"
+          });
+        });
+    },
+    loadNew() {
+      this.domain = {
+        paths: []
+      };
     },
     addPath(path) {
+      if (!this.domain.paths) this.domain.paths = [];
       this.domain.paths.push(path);
     },
     updatePath(payload) {
@@ -120,11 +273,11 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.reset();
 
-    this.isNew = to.params.domain === 'new';
+    this.isNew = to.params.domain === "new";
 
     if (!this.isNew) {
       this.load(to.params.domain);
-    }
+    } else this.loadNew();
 
     next();
   },
@@ -132,12 +285,12 @@ export default {
     next(vm => {
       vm.reset();
 
-      vm.isNew = to.params.domain === 'new';
+      vm.isNew = to.params.domain === "new";
 
       if (!vm.isNew) {
         vm.load(to.params.domain);
-      }
+      } else vm.loadNew();
     });
   }
-}
+};
 </script>
