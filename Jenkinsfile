@@ -1,55 +1,40 @@
-@Library("sharedLibraries")
+// @Library("sharedLibraries")
 
-def parent = "red"
-def project = "swerve-ui"
+// def parent = "red"
+// def project = "swerve-ui"
 
-node("jenkins-agent-images") {
+// node("jenkins-agent-npm") {
 
-	stage("clone repository") {
-		deleteDir()
-		checkout(scm)
-	}
+// 	stage("clone repository") {
+// 		deleteDir()
+// 		checkout(scm)
+// 	}
 
-	def BRANCH_NAME = getBranchName()
+// 	buildSwerveUI()
 
-	parent = "${parent}${BRANCH_NAME != "master" ? '-branches' : ''}"
+// 	def releaseVersion
 
-	def dockerBuildOnly = BRANCH_NAME == ""
+// 	stage("get release version") {
+// 		releaseVersion = sh(
+// 			script: """grep -e "version" package.json | awk '{print \$2}' | sed 's/[",]//g'""",
+// 			returnStdout: true
+// 		).trim()
+// 	}
 
-	def imageTag = buildDockerContainer2(
-			parent: "${parent}",
-			project: "${project}",
-			branch: "${BRANCH_NAME}",
-			dockerBuildOnly: dockerBuildOnly
-	)
+// 	// staging
+// 	uploadToAkamai(
+// 		privateKeyFilename: "swerveui_stg_rsa",
+// 		domainNamePrefix: "cmsassetsstg",
+// 		buildOutputDir: "build",
+// 		targetPath: "/swerveui/${releaseVersion}/"
+// 	)
 
-	if (!dockerBuildOnly) {
+// 	// production
+// 	uploadToAkamai(
+// 		privateKeyFilename: "swerveui_prd_rsa",
+// 		domainNamePrefix: "cmsassetsprd",
+// 		buildOutputDir: "build",
+// 		targetPath: "/swerveui/${releaseVersion}/"
+// 	)
 
-		if (BRANCH_NAME == "master") {
-
-			deployKubernetes(
-					parent: "${parent}",
-					project: "${project}",
-					imageTag: "${imageTag}",
-					namespace: "red-stg",
-					env: "stg"
-			)
-
-            // deployKubernetes(
-            //     parent: "${parent}",
-            //     project: "${project}",
-            //     imageTag: "${imageTag}",
-            //     namespace: "red-prd",
-            //     env: "prd"
-            // )
-
-			// sendReleaseMail(
-			// 		project: "${project}",
-			// 		imageTag: "${imageTag}",
-			// 		mailto: "jenkins-red@spring-media.de",
-			// 		env: "PRODUCTION"
-			// )
-
-		}
-	}
-}
+// }
