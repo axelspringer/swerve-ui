@@ -1,40 +1,119 @@
-// @Library("sharedLibraries")
+@Library("sharedLibraries")
 
-// def parent = "red"
-// def project = "swerve-ui"
+def parent = "red"
+def project = "swerve"
 
-// node("jenkins-agent-npm") {
+node("jenkins-agent-images") {
 
-// 	stage("clone repository") {
-// 		deleteDir()
-// 		checkout(scm)
-// 	}
+	stage("clone repository") {
+		deleteDir()
+		checkout(scm)
+	}
 
-// 	buildSwerveUI()
+	def BRANCH_NAME = getBranchName()
 
-// 	def releaseVersion
+	parent = "${parent}${BRANCH_NAME != "master" ? '-branches' : ''}"
 
-// 	stage("get release version") {
-// 		releaseVersion = sh(
-// 			script: """grep -e "version" package.json | awk '{print \$2}' | sed 's/[",]//g'""",
-// 			returnStdout: true
-// 		).trim()
-// 	}
+	def dockerBuildOnly = BRANCH_NAME == ""
+	def imageTagStg
+	def imageTagPrd
 
-// 	// staging
-// 	uploadToAkamai(
-// 		privateKeyFilename: "swerveui_stg_rsa",
-// 		domainNamePrefix: "cmsassetsstg",
-// 		buildOutputDir: "build",
-// 		targetPath: "/swerveui/${releaseVersion}/"
-// 	)
+	if (BRANCH_NAME == "master") {
+		imageTagPrd = buildContainer(
+				parent: "${parent}",
+				project: "${project}",
+				branch: "${BRANCH_NAME}",
+				nodeEnv: "production"
+				dockerBuildOnly: dockerBuildOnly
+		)
+	}
 
-// 	// production
-// 	uploadToAkamai(
-// 		privateKeyFilename: "swerveui_prd_rsa",
-// 		domainNamePrefix: "cmsassetsprd",
-// 		buildOutputDir: "build",
-// 		targetPath: "/swerveui/${releaseVersion}/"
-// 	)
+	imageTagStg = buildContainer(
+			parent: "${parent}",
+			project: "${project}",
+			branch: "${BRANCH_NAME}",
+			nodeEnv: "staging"
+			dockerBuildOnly: dockerBuildOnly
+	)
 
-// }
+	if (!dockerBuildOnly) {
+		if (BRANCH_NAME == "master") {
+			deployKubernetes(
+				parent: "${parent}",
+				project: "${project}",
+				imageTag: "${imageTagPrd}",
+				namespace: "red-prd",
+				env: "prd"
+			)
+
+			sendReleaseMail(
+					project: "${project}",
+					imageTag: "${imageTag}",
+					mailto: "jenkins-red@spring-media.de",
+					env: "PRODUCTION"
+			)
+		}
+
+		deployKubernetes(
+			parent: "${parent}",
+			project: "${project}",
+			imageTag: "${imageTagStg}",
+			namespace: "red-stg",
+			env: "stg"
+		)
+	}
+}
+
+def buildContainer(Map pipelineParams) {
+	def registry = "spring-docker.jfrog.io"
+	def credentialIdArtifactory = "artifactory-user"
+
+	def project = "${pipelineParams.project}"
+	def parent = "${pipelineParams.parent}"
+	def nodeEnv = "${pipelineParams.nodeEnv}"
+
+	def dockerBuildOnly = pipelineParams.dockerBuildOnly ?: false
+	def dockerTag
+
+	try {
+		container("docker") {
+
+			stage("build docker image") {
+				withCredentials([
+					usernamePassword(
+						credentialsId: "${credentialIdArtifactory}",
+						usernameVariable: "ARTIFACTORY_USERNAME",
+						passwordVariable: "ARTIFACTORY_PASSWORD"
+					)
+				]) {
+					sh "docker login -u $ARTIFACTORY_USERNAME -p '$ARTIFACTORY_PASSWORD' https://${registry}"
+
+					if (dockerBuildOnly) {
+						sh "make build PROJECT=${project} PARENT=${parent} NODE_ENV=${nodeEnv}"
+					} else {
+						sh "make release PROJECT=${project} PARENT=${parent} NODE_ENV=${nodeEnv}"
+					}
+
+					dockerTag = sh(
+						returnStdout: true,
+						script: "make gettag"
+					).trim()
+
+                    sh "docker rmi spring-docker.jfrog.io/${parent}/${project}:${dockerTag} spring-docker.jfrog.io/${parent}/${project}:latest"
+				}
+			}
+		}
+	} catch (e) {
+		emailext (
+			mimeType: "text/html",
+			subject: "Docker container build has failed",
+			body: """
+			<p> &#9760; Something went wrong</p>
+			<p><b>Here you find the result of the Jenkins build:</b> "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>
+			""",
+			recipientProviders: [[$class: "DevelopersRecipientProvider"]]
+		)
+		throw e
+	}
+
+}
