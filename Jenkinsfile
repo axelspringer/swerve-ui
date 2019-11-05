@@ -1,7 +1,7 @@
 @Library("sharedLibraries")
 
 def parent = "red"
-def project = "swerve"
+def project = "swerve-ui"
 
 node("jenkins-agent-images") {
 

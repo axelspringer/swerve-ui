@@ -1,4 +1,4 @@
-PROJECT=red-delivery
+PROJECT=swerve-ui
 PARENT=red
 
 REGISTRY=spring-docker.jfrog.io
