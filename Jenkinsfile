@@ -23,7 +23,7 @@ node("jenkins-agent-images") {
 				parent: "${parent}",
 				project: "${project}",
 				branch: "${BRANCH_NAME}",
-				nodeEnv: "production"
+				nodeEnv: "production",
 				dockerBuildOnly: dockerBuildOnly
 		)
 	}
@@ -38,27 +38,31 @@ node("jenkins-agent-images") {
 
 	if (!dockerBuildOnly) {
 		if (BRANCH_NAME == "master") {
-			deployKubernetes(
+			deployKubernetesEKS(
 				parent: "${parent}",
 				project: "${project}",
 				imageTag: "${imageTagPrd}",
-				namespace: "red-prd",
+				k8sCluster: "preview-red-springtools-de",
+				namespace: "preview-prd",
+				releaseName: "preview",
 				env: "prd"
 			)
 
 			sendReleaseMail(
-					project: "${project}",
-					imageTag: "${imageTag}",
-					mailto: "jenkins-red@spring-media.de",
-					env: "PRODUCTION"
+				project: "${project}",
+				imageTag: "${imageTagPrd}",
+				mailto: "jenkins-red@spring-media.de",
+				env: "PRODUCTION"
 			)
 		}
 
-		deployKubernetes(
+		deployKubernetesEKS(
 			parent: "${parent}",
 			project: "${project}",
 			imageTag: "${imageTagStg}",
-			namespace: "red-stg",
+			k8sCluster: "preview-red-springtools-de",
+			namespace: "preview-stg",
+			releaseName: "preview",
 			env: "stg"
 		)
 	}
