@@ -32,7 +32,7 @@ node("jenkins-agent-images") {
 			parent: "${parent}",
 			project: "${project}",
 			branch: "${BRANCH_NAME}",
-			nodeEnv: "staging"
+			nodeEnv: "staging",
 			dockerBuildOnly: dockerBuildOnly
 	)
 
