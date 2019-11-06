@@ -9,7 +9,7 @@ COPY . /app
 ARG NODE_ENV
 ENV PATH /app/node_modules/.bin:$PATH
 RUN npm config set unsafe-perm true
-RUN npm install -g @vue/cli && \
+RUN npm install @vue/cli && \
     npm install
 RUN vue-cli-service build --mode NODE_ENV
 
