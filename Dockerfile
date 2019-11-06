@@ -11,7 +11,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 RUN npm config set unsafe-perm true
 RUN npm install @vue/cli && \
     npm install
-RUN vue-cli-service build --mode NODE_ENV
+RUN /app/node_modules/.bin/vue-cli-service build --mode NODE_ENV
 
 # ---- Release ----å
 FROM nginx AS release
