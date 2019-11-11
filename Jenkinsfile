@@ -27,7 +27,7 @@ podTemplate(name: 'jenkins-agent-swerve-ui',
 				initNodeJS()
 
 				sh """
-					yarn add @vue/cli
+					yarn global add @vue/cli
 					yarn install
 				"""
 
