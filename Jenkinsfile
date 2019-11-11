@@ -22,20 +22,20 @@ podTemplate(name: 'jenkins-agent-swerve-ui',
 		def dockerBuildOnly = BRANCH_NAME == "" ? true : false
 
 		container("nodejs") {
-			stage("build and test") {
+			stage("build") {
 
 				initNodeJS()
 
 				sh """
+					yarn add @vue/cli
 					yarn install
-					yarn check --integrity
-					yarn check --verify-tree
-					yarn build
-
-					# yarn check:all
-					
-					yarn install --production
 				"""
+
+				if (BRANCH_NAME == "master") {
+					sh "vue-cli-service build --mode production"
+				}  else {
+					sh "vue-cli-service build --mode staging"
+				}
 			}
 		}
 
