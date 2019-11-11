@@ -32,9 +32,9 @@ podTemplate(name: 'jenkins-agent-swerve-ui',
 				"""
 
 				if (BRANCH_NAME == "master") {
-					sh "vue-cli-service build --mode production"
+					sh "yarn build --mode production"
 				}  else {
-					sh "vue-cli-service build --mode staging"
+					sh "yarn build --mode staging"
 				}
 			}
 		}
