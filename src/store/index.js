@@ -1,7 +1,7 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import auth from "./auth.module";
-import domains from "./domains.module";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import auth from './auth.module';
+import domains from './domains.module';
 
 Vue.use(Vuex);
 
@@ -14,10 +14,10 @@ const mutations = {
     state.notifications = state.notifications.filter(n => n !== notification);
   },
   updateDomainsLoadingStatus(state, status) {
-    state.isLoadingDomains = status
+    state.isLoadingDomains = status;
   },
   updateDomainLoadingStatus(state, status) {
-    state.isLoadingDomain = status
+    state.isLoadingDomain = status;
   }
 };
 
@@ -31,7 +31,8 @@ export default new Vuex.Store({
     isLoading: false,
     isLoadingDomains: false,
     isLoadingDomain: false,
-    notifications: []
+    notifications: [],
+    endpoint: process.env.VUE_APP_ENDPOINT
   },
   mutations,
   actions: {}

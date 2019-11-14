@@ -14,7 +14,7 @@
             required
             class="form-input"
             :disabled="!isNew"
-          >
+          />
         </div>
         <div class="mb-1">
           <label for="redirect-field" class="form-label mb-1 ml-px">Redirect</label>
@@ -25,7 +25,7 @@
             placeholder="redirect.com"
             required
             class="form-input"
-          >
+          />
         </div>
         <div class="flex mb-4">
           <input
@@ -34,7 +34,7 @@
             id="promotable-field"
             class="mr-2 bg-blue-dark"
             v-model="domain.promotable"
-          >
+          />
           <label for="promotable-field" class="form-label">
             Include Path and Query-String
             <span class="text-xs">(optional)</span>
@@ -116,9 +116,9 @@ export default {
     };
   },
   computed: {
-    ...mapState("auth", ['endpoint']),
+    ...mapState(["endpoint"]),
     ...mapState("domains", ["domains"]),
-    ...mapState(['isLoadingDomain']),
+    ...mapState(["isLoadingDomain"])
   },
   methods: {
     ...mapActions("domains", [
@@ -136,7 +136,7 @@ export default {
       this.fetchList({
         endpoint: this.endpoint,
         cursor: "reload"
-        }).catch(() => {
+      }).catch(() => {
         this.addNotification({
           type: "failure",
           text: "Domains could not be loaded"
@@ -147,8 +147,8 @@ export default {
     save() {
       if (this.isNew) {
         this.createOne({
-        endpoint: this.endpoint,
-        domain: this.domain
+          endpoint: this.endpoint,
+          domain: this.domain
         })
           .then(() => {
             this.addNotification({
@@ -157,13 +157,13 @@ export default {
             });
             this.reload();
           })
-          .catch((err) => {
+          .catch(err => {
             if (err.toString() == "Error: Unauthorized") {
               this.addNotification({
-              type: "failure",
-              text: "Please relogin"
-            });
-              return
+                type: "failure",
+                text: "Please relogin"
+              });
+              return;
             }
             this.addNotification({
               type: "failure",
@@ -174,7 +174,7 @@ export default {
       } else
         this.updateOne({
           endpoint: this.endpoint,
-          domain: this.domain,
+          domain: this.domain
         })
           .then(() => {
             this.addNotification({
@@ -183,13 +183,13 @@ export default {
             });
             this.reload();
           })
-          .catch((err) => {
+          .catch(err => {
             if (err.toString() == "Error: Unauthorized") {
               this.addNotification({
-              type: "failure",
-              text: "Please relogin"
-            });
-              return
+                type: "failure",
+                text: "Please relogin"
+              });
+              return;
             }
             this.addNotification({
               type: "failure",
@@ -205,7 +205,7 @@ export default {
       this.deleteOne({
         endpoint: this.endpoint,
         domain: this.domain
-        })
+      })
         .then(() => {
           this.addNotification({
             type: "success",
@@ -213,14 +213,14 @@ export default {
           });
           this.reload();
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.toString() == "Error: Unauthorized") {
-              this.addNotification({
+            this.addNotification({
               type: "failure",
               text: "Please relogin"
             });
-              return
-            }
+            return;
+          }
           this.addNotification({
             type: "failure",
             text: "Domain could not be deleted"
@@ -228,24 +228,24 @@ export default {
         });
     },
     load(id) {
-      this.updateDomainLoadingStatus(true)
+      this.updateDomainLoadingStatus(true);
       this.fetchOne({
         endpoint: this.endpoint,
         id
       })
         .then(response => {
-          this.updateDomainLoadingStatus(false)
+          this.updateDomainLoadingStatus(false);
           this.domain = {
             paths: [],
             code: "301",
             ...response.data
           };
         })
-        .catch((err) => {
-          this.updateDomainLoadingStatus(false)
+        .catch(err => {
+          this.updateDomainLoadingStatus(false);
           if (err.toString() == "Error: Unauthorized") {
-            this.$router.push({name: "login"});
-            return
+            this.$router.push({ name: "login" });
+            return;
           }
           this.addNotification({
             type: "failure",
