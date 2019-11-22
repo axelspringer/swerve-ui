@@ -56,6 +56,7 @@ podTemplate(name: 'jenkins-agent-swerve-ui',
 								k8sCluster: "preview-red-springtools-de",
 								namespace: "preview-prd",
 								releaseName: "preview",
+								helmValuesFile: "values-preview-stg.yaml",
 								env: "prd"
 							)
 			}
@@ -67,6 +68,7 @@ podTemplate(name: 'jenkins-agent-swerve-ui',
 							k8sCluster: "preview-red-springtools-de",
 							namespace: "preview-stg",
 							releaseName: "preview",
+							helmValuesFile: "values-preview-prd.yaml",
 							env: "stg"
 						)
 		}
