@@ -48,27 +48,23 @@ podTemplate(name: 'jenkins-agent-swerve-ui',
 		)
 
 		if (!dockerBuildOnly) {
-			if (BRANCH_NAME == "master") {
-				deployKubernetesEKS(
-								parent: "${parent}",
-								project: "${project}",
-								imageTag: "${imageTag}",
-								k8sCluster: "preview-red-springtools-de",
-								namespace: "preview-prd",
-								releaseName: "preview",
-								env: "prd"
-							)
-			}
+			deployKubernetes(
+				parent: "${parent}",
+				project: "${project}",
+				imageTag: "${imageTag}",
+				namespace: "red-stg",
+				env: "stg"
+			)
 
-			deployKubernetesEKS(
-							parent: "${parent}",
-							project: "${project}",
-							imageTag: "${imageTag}",
-							k8sCluster: "preview-red-springtools-de",
-							namespace: "preview-stg",
-							releaseName: "preview",
-							env: "stg"
-						)
+			if (BRANCH_NAME == "master") {
+				deployKubernetes(
+					parent: "${parent}",
+					project: "${project}",
+					imageTag: "${imageTag}",
+					namespace: "red-prd",
+					env: "prd"
+				)
+			}
 		}
 	}
 }
