@@ -6,18 +6,19 @@ const handleError = response => {
   return response;
 };
 
-const toJSON = response => response.json();
+const toJSON = text => (text.length ? JSON.parse(text) : {});
+
+const toText = response => response.text();
 
 const request = (resource, options = {}) => {
   return fetch(resource, {
     method: "GET",
     ...options
   })
-  .then(handleError)
-  .then(toJSON)
-  .catch(error => error)
+    .then(handleError)
+    .then(toText)
+    .then(toJSON);
 };
-
 /**
  * 
  * @param {string} resource 
@@ -26,7 +27,8 @@ const request = (resource, options = {}) => {
  */
 const read = resource => {
   return request(resource, {
-    method: 'GET'
+    method: 'GET',
+    credentials: "include",
   });
 };
 
@@ -40,7 +42,8 @@ const read = resource => {
 const create = (resource, data) => {
   return request(resource, {
     method: 'POST',
-    data: JSON.stringify(data)
+    credentials: "include",
+    body: JSON.stringify(data)
   });
 };
 
@@ -52,7 +55,8 @@ const create = (resource, data) => {
  */
 const remove = resource => {
   return request(resource, {
-    method: "DELETE"
+    method: "DELETE",
+    credentials: "include",
   });
 };
 
@@ -65,7 +69,8 @@ const remove = resource => {
 const update = (resource, data) => {
   return request(resource, {
     method: "PUT",
-    data: JSON.stringify(data)
+    credentials: "include",
+    body: JSON.stringify(data)
   });
 };
 

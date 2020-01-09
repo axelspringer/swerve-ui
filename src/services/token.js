@@ -1,13 +1,14 @@
-import { getItem, removeItem, setItem } from "./storage";
+import { getItem, removeItem, setItem } from './storage';
 
-const TOKEN_STORAGE_KEY = "swerve_access_token";
+const TOKEN_STORAGE_KEY = 'swerve_access_token';
+const ENDPOINT_STORAGE_KEY = 'swerve_endpoint';
 
 /**
- * 
- * @param {string} token 
+ *
+ * @param {string} token
  */
-const setToken = (token) => {
-  return setItem(TOKEN_STORAGE_KEY, token);
+const setLoginData = data => {
+  setItem(TOKEN_STORAGE_KEY, data.token);
 };
 
 /**
@@ -17,15 +18,26 @@ const getToken = () => {
   return getItem(TOKEN_STORAGE_KEY);
 };
 
-const clearToken = () => {
-  return removeItem(TOKEN_STORAGE_KEY);
+const getEndpoint = () => {
+  return process.env.VUE_APP_ENDPOINT;
+};
+
+const clearLoginData = () => {
+  removeItem(TOKEN_STORAGE_KEY);
 };
 
 /**
  * @returns {boolean}
  */
 const isValid = () => {
-  return !!getToken();
+  return !!getToken() && !!getEndpoint();
 };
 
-export { TOKEN_STORAGE_KEY, getToken, clearToken, setToken, isValid };
+export {
+  TOKEN_STORAGE_KEY,
+  getToken,
+  getEndpoint,
+  clearLoginData,
+  setLoginData,
+  isValid
+};

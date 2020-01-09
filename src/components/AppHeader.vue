@@ -17,11 +17,10 @@ export default {
   name: "app-header",
   methods: {
     ...mapMutations('auth', [
-      'clearToken'
+      'clearLoginData'
     ]),
     logout() {
-      console.log("logout");
-      this.clearToken();
+      this.clearLoginData();
       this.$router.push({name: "login"});
     }
   }

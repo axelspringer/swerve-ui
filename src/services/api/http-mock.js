@@ -1,70 +1,73 @@
+const handleError = response => {
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response;
+};
+
+const toJSON = text => (text.length ? JSON.parse(text) : {});
+
+const toText = response => response.text();
+
+const request = (resource, options = {}) => {
+  return fetch(resource, {
+    method: "GET",
+    ...options
+  })
+    .then(handleError)
+    .then(toText)
+    .then(toJSON);
+};
+
 /**
- * 
- * @param {string} resource 
- * 
+ *
+ * @param {string} resource
+ *
  * @returns {Promise}
  */
 const read = resource => {
-  let data = JSON.parse(localStorage.getItem(resource));
-
-  if (resource === "https://api.swerve.tortuga.cloud/domains") {
-    data = Object.keys(localStorage)
-      .filter(key => key.startsWith("https://api.swerve.tortuga.cloud/domains"))
-      .map(key => JSON.parse(localStorage.getItem(key)));
-  }
-
-  return Promise.resolve({
-    data
+  return request(resource, {
+    method: "GET"
   });
 };
 
 /**
- * 
- * @param {string} resource 
- * @param {*} data 
- * 
+ *
+ * @param {string} resource
+ * @param {*} data
+ *
  * @returns {Promise}
  */
 const create = (resource, data) => {
-  const id = Math.floor(Math.random() * 1000000);
-  const payload = {
-    ...data,
-    id
-  };
-  const storageKey = resource + '/' + id;
-
-  localStorage.setItem(storageKey, JSON.stringify(payload));
-  
-  return Promise.resolve({
-    data: payload
+  return request(resource, {
+    method: "POST",
+    body: JSON.stringify(data)
   });
 };
 
 /**
- * 
- * @param {string} resource 
- * 
+ *
+ * @param {string} resource
+ *
  * @returns {Promise}
  */
-const remove = (resource) => {
-  localStorage.removeItem(resource);
-
-  return Promise.resolve({
-
+const remove = resource => {
+  return request(resource, {
+    method: "DELETE"
   });
 };
 
 /**
- * 
- * @param {string} resource 
- * 
+ *
+ * @param {string} resource
+ *
  * @return {Promise}
  */
 const update = (resource, data) => {
-  localStorage.setItem(resource, JSON.stringify(data));
-  
-  return Promise.resolve({
-    data
+  return request(resource, {
+    method: "PUT",
+    body: JSON.stringify(data)
   });
 };
 
