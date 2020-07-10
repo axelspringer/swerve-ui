@@ -27,7 +27,7 @@ const getters = {};
 
 const actions = {
   async fetchOne({ commit }, {endpoint, id}) {
-    let response = await read(`${endpoint}/api/domain/${id}`);
+    let response = await read(`${endpoint}/redirects/${id}`);
 
     if (!response) {
       response = { data: {} };
@@ -36,27 +36,27 @@ const actions = {
     return response;
   },
   async fetchList({ commit }, {endpoint, cursor}) {
-    const response = await read(endpoint + "/api/domain" + (cursor && cursor != "reload" ? ("?cursor=" + cursor) : ""));
+    const response = await read(endpoint + "/redirects/" + (cursor && cursor != "reload" ? ("?cursor=" + cursor) : ""));
 
     if (cursor == "reload") {
       response.data.reload = true;
     }
-    commit("setDomains", response.data || []);
+    commit("setDomains", response || []);
 
     return response;
   },
   async updateOne({ commit }, {endpoint, domain}) {
-    const response = await update(`${endpoint}/api/domain/${domain.domain}`, domain);
+    const response = await update(`${endpoint}/redirects/${domain.redirect_from}`, domain);
 
     return response;
   },
   async createOne({ commit }, {endpoint, domain}) {
-    const response = await create(endpoint + "/api/domain/", domain);
+    const response = await create(endpoint + "/redirects/", domain);
 
     return response;
   },
   async deleteOne({ commit }, {endpoint, domain}) {
-    const response = await remove(`${endpoint}/api/domain/${domain.domain}`);
+    const response = await remove(`${endpoint}/redirects/${domain.redirect_from}`);
 
     return response;
   }
@@ -68,8 +68,8 @@ const mutations = {
    * @param {Domain[]} domains
    */
   setDomains(state, domains) {
-    if (state.domains && state.domains.domains && !domains.reload) {
-      state.domains.domains = [...state.domains.domains, ...domains.domains]
+    if (state.domains && state.domains.data && !domains.reload) {
+      state.domains.data = [...state.domains.data, ...domains.data]
       state.domains.cursor = domains.cursor
     } else
     state.domains = domains;
@@ -79,7 +79,7 @@ const mutations = {
    * @param {Domain} domain
    */
   addDomain(state, domain) {
-    state.domains.push(domain);
+    state.data.push(domain);
   }
 };
 

@@ -1,8 +1,8 @@
 <template>
   <div class="h-full w-full md:flex text-center py-4 px-8">
-    <domain-list class="m-auto w-full mb-24 md:m-0 md:w-1/6"></domain-list>
+    <domain-list class="m-auto w-full mb-24 md:m-0 md:w-1/5"></domain-list>
     <div class="w-12 h-full"></div>
-    <router-view class="m-auto w-full md:m-0 md:w-auto md:w-2/3"></router-view>
+    <router-view class="m-auto w-full md:m-0 md:w-auto md:w-3/4"></router-view>
   </div>
 </template>
 

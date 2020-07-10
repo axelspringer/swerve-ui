@@ -85,7 +85,7 @@ export default {
           });
           return
       }
-      if (!url.origin) {
+      if (!url.href) {
         this.addNotification({
             type: "failure",
             text: "Please enter a valid endpoint"
@@ -96,7 +96,7 @@ export default {
       this.fetchLoginData({
         username: this.username,
         password: this.password,
-        endpoint: url.origin,
+        endpoint: url.href,
       })
         .then((res) => {
           this.$router.push(

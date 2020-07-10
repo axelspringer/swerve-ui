@@ -15,8 +15,8 @@ const getters = {
 const actions = {
   async fetchLoginData({commit}, {username, password, endpoint}) {
       const response = await create(endpoint + "/login", {
-        username,
-        password
+        username: username,
+        pwd: password
       })
   
       commit('storeLoginData', {

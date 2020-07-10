@@ -14,12 +14,12 @@
       <ul class="list-reset">
         <router-link
           v-for="domain of orderedDomains"
-          :key="domain.domain"
+          :key="domain.redirect_from"
           tag="li"
-          :to="{name: 'domain', params: {domain: domain.domain}}"
+          :to="{name: 'domain', params: {domain: domain.redirect_from}}"
           class="router-link"
         >
-          <a class="text-white no-underline">{{domain.domain}}</a>
+          <a class="text-white no-underline">{{domain.redirect_from}}</a>
         </router-link>
       </ul>
     </div>
@@ -48,9 +48,9 @@ export default {
     ...mapState(['isLoadingDomains']),
     orderedDomains: function() {
       let sortDomains = Object.assign({}, this.domains);
-      if (sortDomains.domains) {
-        if (this.filter != "") sortDomains.domains  = sortDomains.domains.filter((domain) => domain.domain.startsWith(this.filter));
-        return [...sortDomains.domains].sort(function(a, b) {
+      if (sortDomains.data) {
+        if (this.filter != "") sortDomains.data  = sortDomains.data.filter((domain) => domain.redirect_from.startsWith(this.filter));
+        return [...sortDomains.data].sort(function(a, b) {
           if (a.domain < b.domain) return -1;
           if (a.domain > b.domain) return 1;
           return 0;
@@ -70,7 +70,7 @@ export default {
         if (this.domains.cursor != "EOF") {
         this.fetchList({
         endpoint: this.endpoint,
-        cursor: this.domain.cursor
+        cursor: this.domains.cursor
         }).catch(() => {
           this.addNotification({
             type: "failure",

@@ -10,7 +10,7 @@
             name="domain-field"
             id="domain-field"
             placeholder="domain.com"
-            v-model="domain.domain"
+            v-model="domain.redirect_from"
             required
             class="form-input"
             :disabled="!isNew"
@@ -21,7 +21,7 @@
           <input
             name="redirect-field"
             id="redirect-field"
-            v-model="domain.redirect"
+            v-model="domain.redirect_to"
             placeholder="redirect.com"
             required
             class="form-input"
@@ -63,9 +63,9 @@
       <fieldset class="form-fieldset">
         <legend class="form-legend">Paths</legend>
         <domain-paths
-          :paths="domain.paths"
-          :target="domain.redirect"
-          :domain="domain.domain"
+          :paths="domain.path_map"
+          :target="domain.redirect_to"
+          :domain="domain.redirect_from"
           @add="addPath"
           @update="updatePath"
           @remove="removePath"
@@ -79,7 +79,7 @@
             <span class="text-xs">(optional)</span>
           </label>
           <textarea
-            rows="3"
+            rows="4"
             id="description-field"
             name="description-field"
             v-model="domain.description"
@@ -183,7 +183,7 @@ export default {
             });
             this.reload();
           })
-          .catch((err) => {
+          .catch(err => {
             if (err.toString() == "Error: Unauthorized") {
               this.addNotification({
               type: "failure",
@@ -236,7 +236,7 @@ export default {
         .then(response => {
           this.updateDomainLoadingStatus(false)
           this.domain = {
-            paths: [],
+            path_map: [],
             code: "301",
             ...response.data
           };
@@ -255,19 +255,19 @@ export default {
     },
     loadNew() {
       this.domain = {
-        paths: []
+        path_map: []
       };
     },
     addPath(path) {
-      if (!this.domain.paths) this.domain.paths = [];
-      this.domain.paths.push(path);
+      if (!this.domain.path_map) this.domain.path_map = [];
+      this.domain.path_map.push(path);
     },
     updatePath(payload) {
       payload.path.from = payload.from;
       payload.path.to = payload.to;
     },
     removePath(path) {
-      this.domain.paths = this.domain.paths.filter(p => p !== path);
+      this.domain.path_map = this.domain.path_map.filter(p => p !== path);
     }
   },
   beforeRouteUpdate(to, from, next) {
